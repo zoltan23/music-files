@@ -1,6 +1,7 @@
 const firebase = require("firebase");
 require("firebase/firestore");
 require("firebase/storage")
+require("firebase/auth")
 
 // Initialize Cloud Firestore through Firebase
 firebase.initializeApp({
@@ -15,7 +16,8 @@ firebase.initializeApp({
 
 module.exports = {
     db: firebase.firestore(),
-    storage: firebase.storage()
+    storage: firebase.storage(),
+    auth: firebase.auth()
 }
 
 
