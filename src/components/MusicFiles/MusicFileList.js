@@ -43,7 +43,7 @@ function deleteItem (e) {
         <ul className="music-list ul">
         {musicFiles.map(file => (
           <li className="music-list li" key={file.id} >
-            <span>{file.filename}</span>
+            <span>Filname: {file.filename}</span>
             <span><input type="text" onChange={updateItem} defaultValue={updateItem}></input></span>
             <span>{file.note}</span>
             <span><button id={file.id} onClick={deleteItem}>Remove File</button></span>

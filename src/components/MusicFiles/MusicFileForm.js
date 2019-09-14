@@ -2,8 +2,9 @@ import React, {useState} from 'react'
 import Card from '../UI/Card'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../../services/firebase'
-import firestorage from '../../services/firestorage'
 import './MusicFileForm.css'
+import './MusicUpload'
+import MusicUpload from './MusicUpload';
 
 
 function MusicFileForm () {
@@ -33,14 +34,14 @@ function MusicFileForm () {
 
     const onChange = e => {
         console.log("onChange fired!!!");
-        firestorage();
+        
     }
+
     return (
         <section> 
             <form className="form-inline justify-content-center" onSubmit={submitHandler}>                        
                 <div className="form-group mr-2">                                       
-                    <input type="file"  id="fileButton" onChange={onChange}/>
-                    <progress value="0" max="100 " id="uploader">0%</progress>
+                    <MusicUpload />
                 </div>
                 <div className="form-group mr-2">                        
                     <select className="form-control" onChange={getNote}>
