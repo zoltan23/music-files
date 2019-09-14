@@ -7,12 +7,13 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Settings from './services/Settings'
 
 function App() {
+
   return (
     <div className="App">
     <BrowserRouter>
       <Navbar />
       <Switch>
-        <Route path='/upload' component={MusicFileForm} />
+        <Route path='/upload' component={MusicFileForm}  />
         <Route path='/settings' component={Settings} />
       </Switch>
     </BrowserRouter>
