@@ -39,8 +39,8 @@ function MusicFileForm () {
         <section> 
             <form className="form-inline justify-content-center" onSubmit={submitHandler}>                        
                 <div className="form-group mr-2">                                       
-                     <progress value="0" max="100 " id="uploader">0%</progress>
                     <input type="file"  id="fileButton" onChange={onChange}/>
+                    <progress value="0" max="100 " id="uploader">0%</progress>
                 </div>
                 <div className="form-group mr-2">                        
                     <select className="form-control" onChange={getNote}>
