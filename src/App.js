@@ -13,11 +13,12 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Switch>
+        <Route path='/upload' component={MusicFileForm} />
         <Route path='/settings' component={Settings} />
       </Switch>
     </BrowserRouter>      
       <Header />
-      <MusicFileForm />
+      {/* <MusicFileForm /> */}
       <MusicFileList />
     </div>
   );

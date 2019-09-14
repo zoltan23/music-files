@@ -4,9 +4,10 @@ import SignedInLinks from './SignedInLinks'
 
 const Navbar = () => {
     return (
-        <nav className="nav-wrapper grey-darken-3">
-            <div>
-                <Link to='/' >Link 1</Link>
+        <nav className="navbar navbar-expand-sm bg-light">
+            <div className="navbar-nav">
+                <Link className="nav-link" to='/upload' >Upload</Link>
+                <Link className="nav-link" to='/' >Link 2</Link>
                 <SignedInLinks />
             </div>
         </nav>
