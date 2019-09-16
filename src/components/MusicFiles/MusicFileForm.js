@@ -5,6 +5,7 @@ import { db } from '../../services/firebase'
 import './MusicFileForm.css'
 import './MusicUpload'
 import MusicUpload from './MusicUpload';
+import MusicFileList from './MusicFileList'
 import firebase from '../../services/firebase'
 
 function MusicFileForm () {
@@ -78,11 +79,10 @@ function MusicFileForm () {
                 </div>                       
                 <div className="form-group mr-2">
                     <button className="btn btn-primary" type="submit" onClick={addFile}>Upload File</button>  
-                </div>    
-                <div>User ID is: {userId} </div>                    
+                </div>                       
                  </form>
-             </section>        
- 
+                 <div><MusicFileList /></div> 
+             </section> 
     )
 }
 
