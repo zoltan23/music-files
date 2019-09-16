@@ -4,7 +4,10 @@ import { storage } from '../../services/firebase'
 import { v4 } from 'uuid';
 
 const MusicUpload = () => {
+  let uid = firebase.auth().currentUser.uid
+  console.log("firebase auth id: ", uid)
 
+  
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState({})
   const fileInput = useRef();
@@ -17,7 +20,7 @@ const MusicUpload = () => {
     console.log(typeof(files))
     let obj = { files: files, value : e.target.value }
     setFiles(obj);
-
+     
     Object.keys(obj.files).forEach(k => {
       let file = obj.files[k]
       let rnd = v4()
