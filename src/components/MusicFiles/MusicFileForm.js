@@ -5,9 +5,33 @@ import { db } from '../../services/firebase'
 import './MusicFileForm.css'
 import './MusicUpload'
 import MusicUpload from './MusicUpload';
-
+import firebase from '../../services/firebase'
 
 function MusicFileForm () {
+    
+    // const user = firebase.auth.currentUser
+    // if (user) {
+    //     const id = user.id
+    // console.log("User Info", id)
+    // }
+
+    db.collection('cities').get().then(snapshot => {
+        console.log("snapshot", snapshot);
+    })
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [userId, setUserId] = useState('')
+    firebase.auth.onAuthStateChanged(firebaseUser => {
+        if (firebaseUser) {
+          setIsLoggedIn(true)
+          setUserId(firebaseUser.uid)
+          console.log("firebaseUSer", firebaseUser);
+        } else {
+          setUserId('')
+        }
+      });
+
+  
+
     const [filename, setFilename] = useState('')
     const [note, setNote] = useState('')
     const submitHandler = event => {
@@ -20,7 +44,8 @@ function MusicFileForm () {
         e.preventDefault();
         db.collection("music").add({
             filename: filename,
-            note: note
+            note: note,
+            userId: userId
         });
     }
 
@@ -53,7 +78,8 @@ function MusicFileForm () {
                 </div>                       
                 <div className="form-group mr-2">
                     <button className="btn btn-primary" type="submit" onClick={addFile}>Upload File</button>  
-                </div>                        
+                </div>    
+                <div>User ID is: {userId} </div>                    
                  </form>
              </section>        
  
