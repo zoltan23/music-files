@@ -21,43 +21,33 @@ function App() {
       setIsLoggedIn(true)
       console.log("firebaseUser", firebaseUser);
     } else {
-      console.log('not logged in');
+      setIsLoggedIn(false)
     }
   });
 
 
-  // let pageRender
-  // if (isLoggedIn) {
-  //   pageRender = (
-  //     <BrowserRouter>
-  //       <Navbar />
-  //       <Switch>
-  //         {/* Pass userid into Route */}
-  //         <Route path='/upload' component={MusicFileForm} />
-  //         <Route path='/settings' component={Settings} />
-  //         <Route path='/signup' component={SignUp} />
-  //         <Route path='/signout' component={SignOut} />
-  //       </Switch>
-  //     </BrowserRouter>
-
-  //   )
-  // } else {
-  //   pageRender = (<SignIn />)
-  // }
-  return (
-    <div className="App">
+  console.log("App: isloggedin", isLoggedIn)
+  let pageRender
+  if (isLoggedIn) {
+    pageRender = (
       <BrowserRouter>
         <Navbar />
-        <Header />
         <Switch>
           {/* Pass userid into Route */}
           <Route path='/upload' component={MusicFileForm} />
           <Route path='/settings' component={Settings} />
           <Route path='/signup' component={SignUp} />
-          <Route path='/signin' component={SignIn} />
           <Route path='/signout' component={SignOut} />
         </Switch>
       </BrowserRouter>
+    )
+  } else {
+    pageRender = (<SignIn />)
+  }
+
+  return (
+    <div className="App">
+      {pageRender}
     </div>
   );
 }
