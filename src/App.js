@@ -3,6 +3,10 @@ import './App.css';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import LoginPage from './components/LoginPage';
 import Navbar from './components/layout/Navbar'
+import Header from './components/Header'
+import SignOut from './components/SignOut'
+import SignUp from './components/SignUp'
+import SignIn from './components/SignIn'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Settings from './services/Settings'
 import firebase from './services/firebase'
@@ -15,31 +19,45 @@ function App() {
   firebase.auth.onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
       setIsLoggedIn(true)
-      console.log(firebaseUser);
+      console.log("firebaseUser", firebaseUser);
     } else {
       console.log('not logged in');
     }
   });
 
 
-  let pageRender
-  if (isLoggedIn) {
-    pageRender = (
+  // let pageRender
+  // if (isLoggedIn) {
+  //   pageRender = (
+  //     <BrowserRouter>
+  //       <Navbar />
+  //       <Switch>
+  //         {/* Pass userid into Route */}
+  //         <Route path='/upload' component={MusicFileForm} />
+  //         <Route path='/settings' component={Settings} />
+  //         <Route path='/signup' component={SignUp} />
+  //         <Route path='/signout' component={SignOut} />
+  //       </Switch>
+  //     </BrowserRouter>
+
+  //   )
+  // } else {
+  //   pageRender = (<SignIn />)
+  // }
+  return (
+    <div className="App">
       <BrowserRouter>
         <Navbar />
+        <Header />
         <Switch>
           {/* Pass userid into Route */}
           <Route path='/upload' component={MusicFileForm} />
           <Route path='/settings' component={Settings} />
+          <Route path='/signup' component={SignUp} />
+          <Route path='/signin' component={SignIn} />
+          <Route path='/signout' component={SignOut} />
         </Switch>
       </BrowserRouter>
-    )
-  } else {
-    pageRender = (<LoginPage />)
-  }
-  return (
-    <div className="App">
-      {pageRender}
     </div>
   );
 }

@@ -21,7 +21,7 @@ const MusicUpload = () => {
     Object.keys(obj.files).forEach(k => {
       let file = obj.files[k]
       let rnd = v4()
-      console.log(rnd)
+      console.log("rnd", rnd)
       var storageRef = firebase.storage().ref(`football_pics/${rnd}_${file.name}`);
       var task = storageRef.put(file);
 
