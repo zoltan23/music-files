@@ -19,7 +19,7 @@ function App() {
   firebase.auth.onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
       setIsLoggedIn(true)
-      console.log("firebaseUser", firebaseUser);
+      console.log("firebaseUser:", firebaseUser);
     } else {
       setIsLoggedIn(false)
     }
