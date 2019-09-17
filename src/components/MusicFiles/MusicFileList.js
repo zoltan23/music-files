@@ -9,10 +9,7 @@ function MusicFileList(props) {
 
     const [authId, setAuthId] = useState('')
     firebase.auth.onAuthStateChanged(firebaseUser => {
-        if (firebaseUser) {
-          let musicRef = db.collection('music');
-          console.log("musicRef", musicRef)  
-                  
+        if (firebaseUser) {        
           setAuthId(firebaseUser.uid)
           console.log("firebaseUSer", firebaseUser);
         } else {
@@ -21,9 +18,10 @@ function MusicFileList(props) {
       });
      
       
-    useEffect(() => {       
-        let musicRef = db.collection('music');
-        //let queryByUserId = musicRef.where('userId', '==', authId)
+    useEffect(() => {  
+        const user = firebase.auth.currentUser
+        console.log("user", user) 
+        let musicRef = db.collection('music').doc(user.uid).collection('musicId');
         musicRef.onSnapshot(snapshot => {
         let musicArr = []
         snapshot.forEach(doc => {
@@ -34,11 +32,10 @@ function MusicFileList(props) {
         })
     }, [])
 
-
-
 function deleteItem (e) {
         let id = e.target.id
-        db.collection("music").doc(id).delete().then(function () {
+        const user = firebase.auth.currentUser
+        db.collection('music').doc(user.uid).collection('musicId').doc(id).delete().then(function () {
             console.log("Doc successfully deleted");
         }).catch(function (error) {
             console.log("Error removing document", error);
@@ -68,7 +65,7 @@ function deleteItem (e) {
             <span>Filename: {props.filename}</span>
             <span><input type="text" onChange={updateItem} defaultValue={updateItem}></input></span>
             <span>{file.note}</span>
-            <span>User id: {file.userId}</span>
+            <span>User id: {authId}</span>
             <span><button id={file.id} onClick={deleteItem}>Remove File</button></span>
           </li>
         ))}
