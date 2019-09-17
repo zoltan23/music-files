@@ -10,15 +10,7 @@ import firebase from '../../services/firebase'
 
 function MusicFileForm () {
     
-    // const user = firebase.auth.currentUser
-    // if (user) {
-    //     const id = user.id
-    // console.log("User Info", id)
-    // }
 
-    db.collection('cities').get().then(snapshot => {
-        console.log("snapshot", snapshot);
-    })
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [userId, setUserId] = useState('')
     firebase.auth.onAuthStateChanged(firebaseUser => {
@@ -43,11 +35,11 @@ function MusicFileForm () {
     const addFile = e => {
         console.log("addFile submited")
         e.preventDefault();
-        db.collection("music").add({
+        db.collection("music").doc(userId).collection('musicId').doc().set({
             filename: filename,
-            note: note,
-            userId: userId
+            note: note   
         });
+
     }
 
     const getFilename = e => {
@@ -81,7 +73,7 @@ function MusicFileForm () {
                     <button className="btn btn-primary" type="submit" onClick={addFile}>Upload File</button>  
                 </div>                       
                  </form>
-                 <div><MusicFileList /></div> 
+                 <div><MusicFileList userId={userId}/></div> 
              </section> 
     )
 }

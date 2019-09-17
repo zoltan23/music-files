@@ -11,7 +11,8 @@ const MusicUpload = () => {
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState({})
   const fileInput = useRef();
-
+  var storageRef, file, rnd , img
+   
   const handleChange = e => {
     e.preventDefault();
 
@@ -21,11 +22,12 @@ const MusicUpload = () => {
     let obj = { files: files, value : e.target.value }
     setFiles(obj);
      
+  
     Object.keys(obj.files).forEach(k => {
-      let file = obj.files[k]
-      let rnd = v4()
+       file = obj.files[k]
+      rnd = v4()
       console.log("rnd", rnd)
-      var storageRef = firebase.storage().ref(`football_pics/${rnd}_${file.name}`);
+      storageRef = firebase.storage().ref(`football_pics/${uid}/${rnd}_${file.name}`);
       var task = storageRef.put(file);
 
       task.on('state_changed',
@@ -45,21 +47,25 @@ const MusicUpload = () => {
           setFiles(obj)
           fileInput.current.value = null
         }
+        
       );
-
+        
     })
-
+    var storageRef2 = firebase.storage().ref();
+     img = storageRef2.child('football_pics/25d3a732-0842-4f50-af90-764a9cf1bcb7_lsu1.jpg').getDownloadURL().then( url => {
+      console.log("url", url)
+    })
   }
+  
+ 
 
-  const fileUploadHandler = () => {
-    console.log("file uploader button fired")
-  }
 
   return (
     <div className="App">
       <progress value={progress} max="100" id="uploader">0%</progress>
       <input ref={fileInput} type="file" onChange={handleChange} />
       <span>Filename: {files[0] && files[0].name}</span>
+      
     </div>
   );
 }

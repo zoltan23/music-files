@@ -9,7 +9,7 @@ function Header () {
     firebase.auth.onAuthStateChanged(firebaseUser => {
         if (firebaseUser) {
           setIsLoggedIn(true)
-          setUserId(firebaseUser.email)
+          setUserId(firebaseUser.uid)
           console.log("firebaseUSer", firebaseUser);
         } else {
             setUserId('')
