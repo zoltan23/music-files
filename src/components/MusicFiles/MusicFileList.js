@@ -1,18 +1,40 @@
 import React, {useState, useEffect} from 'react'
+import firebase from '../../services/firebase'
 import { db } from '../../services/firebase'
 import './MusicFileList.css'
 
-
-function MusicFileList() {
+function MusicFileList(props) {  
+    
     const [musicFiles, setMusicFiles] = useState([])
 
-    useEffect(() => {
-        db.collection('music').onSnapshot(snapshot => {
-            let musicArr = []
-            snapshot.forEach(doc => musicArr.push({...doc.data(), id: doc.id}))
-            setMusicFiles(musicArr)
+    const [authId, setAuthId] = useState('')
+    firebase.auth.onAuthStateChanged(firebaseUser => {
+        if (firebaseUser) {
+          let musicRef = db.collection('music');
+          console.log("musicRef", musicRef)  
+                  
+          setAuthId(firebaseUser.uid)
+          console.log("firebaseUSer", firebaseUser);
+        } else {
+          setAuthId('')
+        }
+      });
+     
+      
+    useEffect(() => {       
+        let musicRef = db.collection('music');
+        //let queryByUserId = musicRef.where('userId', '==', authId)
+        musicRef.onSnapshot(snapshot => {
+        let musicArr = []
+        snapshot.forEach(doc => {
+        musicArr.push({...doc.data(), id: doc.id})
+        })
+        console.log("music arr", musicArr)
+        setMusicFiles(musicArr)
         })
     }, [])
+
+
 
 function deleteItem (e) {
         let id = e.target.id
@@ -43,9 +65,10 @@ function deleteItem (e) {
         <ul className="music-list ul">
         {musicFiles.map(file => (
           <li className="music-list li" key={file.id} >
-            <span>Filname: {file.filename}</span>
+            <span>Filename: {props.filename}</span>
             <span><input type="text" onChange={updateItem} defaultValue={updateItem}></input></span>
             <span>{file.note}</span>
+            <span>User id: {file.userId}</span>
             <span><button id={file.id} onClick={deleteItem}>Remove File</button></span>
           </li>
         ))}

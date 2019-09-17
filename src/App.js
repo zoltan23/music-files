@@ -47,6 +47,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
       {pageRender}
     </div>
   );
