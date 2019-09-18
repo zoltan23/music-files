@@ -20,14 +20,12 @@ function MusicFileList(props) {
       
     useEffect(() => {  
         const user = firebase.auth.currentUser
-        console.log("user", user) 
         let musicRef = db.collection('music').doc(user.uid).collection('musicId');
         musicRef.onSnapshot(snapshot => {
-        let musicArr = []
-        snapshot.forEach(doc => {
-        musicArr.push({...doc.data(), id: doc.id})
-        })
-        console.log("music arr", musicArr)
+          let musicArr = []
+          snapshot.forEach(doc => {
+          musicArr.push({...doc.data(), id: doc.id})
+          })
         setMusicFiles(musicArr)
         })
     }, [])

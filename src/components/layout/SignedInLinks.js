@@ -4,11 +4,15 @@ import { NavLink } from 'react-router-dom'
 
 const SignedInLinks = () => {
     return(
-        <ul class="navbar navbar-expand-sm bg-primary navbar-dark">
-            <li className="navbar-item"><NavLink className="nav-link" to ='/settings'>Settings</NavLink></li>
-            <li className="navbar-item"><NavLink className="nav-link" to ='/signup'>Sign Up</NavLink></li>
-            <li className="navbar-item"><NavLink className="nav-link" to ='/signout'>Sign Out</NavLink></li>            
+    <div>
+        <ul className="right">
+            <li ><NavLink to ='/settings'>Settings</NavLink></li>
+            <li ><NavLink to ='/'>Record</NavLink></li>
+            <li ><NavLink to ='/upload'>Upload</NavLink></li>            
+            <li ><NavLink to ='/signout'>Sing Out</NavLink></li>            
         </ul>
+    </div>
+        
     )
 }
 

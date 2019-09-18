@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import './App.css';
+//import './App.css';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import LoginPage from './components/LoginPage';
 import Navbar from './components/layout/Navbar'
@@ -36,19 +36,32 @@ function App() {
           {/* Pass userid into Route */}
           <Route path='/upload' component={MusicFileForm} />
           <Route path='/settings' component={Settings} />
-          <Route path='/signup' component={SignUp} />
+         
           <Route path='/signout' component={SignOut} />
+          <Route
+            path='/signout'
+            render={(props) => <SignOut {...props} isLoggedIn="true" />}
+          />
         </Switch>
       </BrowserRouter>
     )
   } else {
-    pageRender = (<SignIn />)
+    pageRender = 
+    <BrowserRouter>
+      <Navbar />
+      <Switch>
+        <Route path='/signin' component={SignIn} />
+        <Route path='/signup' component={SignUp} />
+      </Switch>
+    </BrowserRouter>    
   }
 
   return (
-    <div className="App">
+    <div className="App">  
+      <div class="container">
       <Header />
-      {pageRender}
+        {pageRender}
+      </div>      
     </div>
   );
 }

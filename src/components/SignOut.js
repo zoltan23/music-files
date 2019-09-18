@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import firebase from '../services/firebase'
 
-const SignOut = () => {   
-
+const SignOut = (props) => {   
+    console.log("props.isloggedin", props.isLoggedIn)
     const handleSignOut = (e) => {
         e.preventDefault()
         console.log("Sign out handled");
@@ -11,10 +11,7 @@ const SignOut = () => {
     }
     return(
         <div>
-            <div>
-              
-            </div>
-            <button onClick={handleSignOut}>Sign Out</button>
+            <button className="btn btn-primary" onClick={handleSignOut}>Sign Out</button>
         </div>
     )
 }
