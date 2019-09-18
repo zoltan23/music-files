@@ -4,7 +4,7 @@ import { db } from '../../services/firebase'
 import './MusicFileList.css'
 
 function MusicFileList(props) {  
-    
+    console.log("props in list", props)
     const [musicFiles, setMusicFiles] = useState([])
 
     const [authId, setAuthId] = useState('')
@@ -61,8 +61,8 @@ function deleteItem (e) {
         {musicFiles.map(file => (
           <li className="music-list li" key={file.id} >
             <span>Filename: {props.filename}</span>
-            <span><input type="text" onChange={updateItem} defaultValue={updateItem}></input></span>
-            <span>{file.note}</span>
+            <span>{file.filename}</span>
+            <span>Note: {file.note}</span>
             <span>User id: {authId}</span>
             <span><button id={file.id} onClick={deleteItem}>Remove File</button></span>
           </li>
