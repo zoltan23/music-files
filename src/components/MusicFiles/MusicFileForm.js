@@ -21,15 +21,17 @@ function MusicFileForm () {
         } else {
           setUserId('')
         }
-      });
-
-  
+      });  
 
     const [filename, setFilename] = useState('')
     const [note, setNote] = useState('')
     const submitHandler = event => {
         event.preventDefault()
         console.log("submit handler fired")
+    }
+    
+    const getFilename = (filename) => {
+        setFilename(filename)
     }
 
     const addFile = e => {
@@ -39,27 +41,19 @@ function MusicFileForm () {
             filename: filename,
             note: note   
         });
-
-    }
-
-    const getFilename = e => {
-        setFilename(e.target.value)
+        console.log("addFile filename", filename)
     }
 
     const getNote = e => {
         setNote(e.target.options[e.target.selectedIndex].text)
     }   
 
-    const onChange = e => {
-        console.log("onChange fired!!!");
-        
-    }
-
     return (
         <section> 
             <form className="form-inline justify-content-center" onSubmit={submitHandler}>                        
                 <div className="form-group mr-2">                                       
-                    <MusicUpload />
+                    <MusicUpload fileref={getFilename}/>
+                    <p>{filename}</p>
                 </div>
                 <div className="form-group mr-2">                        
                     <select className="form-control" onChange={getNote}>
