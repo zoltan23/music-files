@@ -31,12 +31,11 @@ function App() {
   if (isLoggedIn) {
     pageRender = (
       <BrowserRouter>
-        <Navbar />
+        <Navbar isLoggedIn={isLoggedIn}/>
         <Switch>
           {/* Pass userid into Route */}
           <Route path='/upload' component={MusicFileForm} />
-          <Route path='/settings' component={Settings} />
-         
+          <Route path='/settings' component={Settings} />         
           <Route path='/signout' component={SignOut} />
           <Route
             path='/signout'
