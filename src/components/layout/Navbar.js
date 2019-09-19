@@ -4,13 +4,14 @@ import SignedInLinks from './SignedInLinks'
 import SignedOutLinks from './SignedOutLinks'
 
 
-const Navbar = () => {
+const Navbar = (props) => {
+    console.log("islogged in", props.isLoggedIn)
+    const links = props.isLoggedIn ? <SignedInLinks /> : <SignedOutLinks /> 
     return (      
         <nav className="nav-wrapper grey darken-3">
             <div className="container">
                 <Link to='/' className="brand-logo">Home</Link>
-                <SignedInLinks />
-                <SignedOutLinks />
+                {links}
             </div>
         </nav>        
     )
