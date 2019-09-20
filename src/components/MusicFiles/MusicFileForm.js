@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../../services/firebase'
 import './MusicFileForm.css'
 import './MusicUpload'
-import MusicUpload from './MusicUpload';
 import MusicFileList from './MusicFileList'
 import firebase from '../../services/firebase'
 import { v4 } from 'uuid';
@@ -42,6 +41,7 @@ function MusicFileForm() {
     console.log("addFile submited")
     e.preventDefault();
     db.collection("music").doc(userId).collection('musicId').doc().set({
+    //db.collection(userId).doc().set({
       filePath: filePath,
       filename: filename,
       note: note
@@ -125,9 +125,9 @@ function MusicFileForm() {
             <div className="form-group mr-2">
               <select className="form-control" onChange={getNote}>
                 <option defaultValue="selected">Note associated with file:</option>
-                <option value="Gb">G-Flat</option>
-                <option value="G">G-Natural</option>
-                <option value="G#">G-Sharp</option>
+                <option value="Fb">Concert F-flat</option>
+                <option value="F">Concert F-natural</option>
+                <option value="F#">Concert F-sharp</option>
               </select>
             </div>
             <div className="form-group mr-2">
