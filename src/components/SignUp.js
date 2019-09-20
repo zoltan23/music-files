@@ -29,7 +29,12 @@ const SignUp = () => {
         console.log("instrument e", instrument)
     }
 
+    const isDisabled = () => {
+        return (firstName && lastName && email && password && instrument && experience) ? false : true
+    }
+
     const handleSignUp = (e) => {
+        console.log("disabled", isDisabled)
         firebase.auth.createUserWithEmailAndPassword(email, password)
             .then(function (user) {
                 console.log("user", user)
@@ -46,13 +51,19 @@ const SignUp = () => {
     }
 
     return (
-        <div>
-            <input type="text" name="txtFname" placeholder="First Name" onChange={getFirstName} required />
-            <input type="text" name="txtLname" placeholder="Last Name" onChange={getLastName} required />
+        <div className="card">
+            <div className="form-row">
+                <div className="form-group col-md-6">
+                    <input className="form-control" type="text" name="txtFname" placeholder="First Name" onChange={getFirstName} required />
+                </div>
+                <div className="form-group col-md-6">
+                    <input className="form-control" type="text" name="txtLname" placeholder="Last Name" onChange={getLastName} required />
+                </div>
+            </div>
             <input type="email" id="txtEmail" placeholder="Email" onChange={e => setEmail(e.target.value)} value={email} />
             <input type="password" id="txtPassword" placeholder="Password" onChange={e => setPassword(e.target.value)} value={password} />
-            <div className="row">
-                <div className="col-sm-4">
+            <div className="form-row">
+                <div className="form-group col-md-6">
                     <select className="form-control" onChange={getInstrument}>
                         <option defaultValue="selected">Instrument used for recordings:</option>
                         <option value="trumpet">Trumpet</option>
@@ -62,12 +73,14 @@ const SignUp = () => {
                         <option value="baritone">Baritone</option>
                     </select>
                 </div>
-                <span className="col-sm-4" >Number of years of experience:</span>
-                <div className="col-sm-4">
-                    <input type="number" name="quantity" min="1" max="20" onChange={getExperience}></input>
+                <div className="form-group col-md-5">
+                    <span className="form-inline justify-content-center">Number of years of experience:</span>
+                </div>
+                <div className="form-group col-md-1">
+                    <input className="" type="number" name="quantity" min="1" max="40" defaultValue="0" onChange={getExperience}></input>
                 </div>
             </div>
-            <button onClick={handleSignUp}>Sign Up</button>
+            <button className="btn btn-dark" disabled={isDisabled()} onClick={handleSignUp}>Sign Up</button>
         </div>
     )
 }
