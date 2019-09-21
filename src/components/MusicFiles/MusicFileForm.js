@@ -8,18 +8,22 @@ import MusicFileList from './MusicFileList'
 import firebase from '../../services/firebase'
 import { v4 } from 'uuid';
 import { callbackify } from 'util';
-
 function MusicFileForm() {
-
+  var storageRef, file, rnd, fileref, storagePath
+  const fileInput = useRef();
   //State varialbes
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userId, setUserId] = useState('')
   const [filePath, setFilePath] = useState('')
   const [filename, setFileName] = useState('')
   const [note, setNote] = useState('')
-
+  const [progress, setProgress] = useState(0)
+  const [files, setFiles] = useState({})
+  let uid = firebase.auth.currentUser.uid
+  console.log("firebase auth id: ", uid)
   firebase.auth.onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
+      console.log('id', firebaseUser.uid)
       setIsLoggedIn(true)
       setUserId(firebaseUser.uid)
       console.log("firebaseUSer", firebaseUser);
@@ -27,52 +31,15 @@ function MusicFileForm() {
       setUserId('')
     }
   });
-
   const submitHandler = event => {
     event.preventDefault()
     console.log("submit handler fired")
   }
-
-  // const getFilename = (e) => {
-  //   setFilename(filename)
-  // }
-
   const addFile = e => {
+    e.preventDefault();
     console.log("addFile submited")
-    e.preventDefault();
-    db.collection("music").doc(userId).collection('musicId').doc().set({
-    //db.collection(userId).doc().set({
-      filePath: filePath,
-      filename: filename,
-      note: note
-    });
-    console.log("addFile filename", filePath)
-  }
-
-  const getNote = e => {
-    setNote(e.target.options[e.target.selectedIndex].text)
-  }
-
-  let uid = firebase.auth.currentUser.uid
-  console.log("firebase auth id: ", uid)
-
-  const [progress, setProgress] = useState(0)
-  const [files, setFiles] = useState({})
-  console.log("files ", typeof (files))
-  const fileInput = useRef();
-  var storageRef, file, rnd, fileref
-
-  let storagePath
-
-  const handleChange = e => {
-    e.preventDefault();
-
-    const files = e.target.files
-    let obj = { files: files, value: e.target.value }
-    setFiles(obj);
-
-    Object.keys(obj.files).forEach(k => {
-      file = obj.files[k]
+    Object.keys(files.files).forEach(k => {
+      file = files.files[k]
       rnd = v4()
       console.log("rnd", rnd)
       storagePath = `football_pics/${uid}/${rnd}_${file.name}`
@@ -80,38 +47,43 @@ function MusicFileForm() {
       var task = storageRef.put(file)
       task.then(s => console.log('sssssss', s))
       task.on('state_changed',
-
         function progress(snapshot) {
           var percentage = (snapshot.bytesTransferred /
             snapshot.totalBytes) * 100;
           setProgress(percentage);
         },
-
         function error(err) {
           console.log("error uploading file", err);
         },
-
         function complete(c) {
           console.log("upload complete");
           setProgress(0)
-          setFiles(obj)
           console.log("C upload completed:", c)
-          
           // callbackSetFileName(storagePath)
           setFileName(fileInput.current.value)
           setFilePath(storagePath)
           fileInput.current.value = null
+          db.collection("music").doc(userId).collection('musicId').doc().set({
+            //db.collection(userId).doc().set({
+            filePath: filePath,
+            filename: filename,
+            note: note
+          });
+          console.log("addFile filename", filePath)
         }
       );
     })
   }
-
-  // const callbackSetFileName = (fileRef) => {
-  //     setFilename(fileRef)
-  //     console.log("filename ", fileRef)
-  // }
-
-
+  const getNote = e => {
+    setNote(e.target.options[e.target.selectedIndex].text)
+  }
+  const handleChange = e => {
+    e.preventDefault();
+    const files = e.target.files
+    let obj = { files: files, value: e.target.value }
+    setFiles(obj);
+    
+  }
   return (
     <section>
       <div class="card">
@@ -136,11 +108,9 @@ function MusicFileForm() {
           </form>
         </div>
       </div>
-
       <div>Filename: {filePath} </div>
       <div><MusicFileList userId={userId} /></div>
     </section>
   )
 }
-
 export default MusicFileForm
