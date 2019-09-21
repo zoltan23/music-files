@@ -6,6 +6,7 @@ import Navbar from './components/layout/Navbar'
 import Header from './components/Header'
 import SignOut from './components/SignOut'
 import SignUp from './components/SignUp'
+import Recorder from './components/Recorder'
 import SignIn from './components/SignIn'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Settings from './services/Settings'
@@ -37,6 +38,7 @@ function App() {
           <Route path='/upload' component={MusicFileForm} />
           <Route path='/settings' component={Settings} />         
           <Route path='/signout' component={SignOut} />
+          <Route path='/recorder' component={Recorder} />
           <Route
             path='/signout'
             render={(props) => <SignOut {...props} isLoggedIn="true" />}
