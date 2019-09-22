@@ -9,64 +9,51 @@ import SignOut from './components/SignOut'
 import SignUp from './components/SignUp'
 import Recorder from './components/Recorder'
 import SignIn from './components/SignIn'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Settings from './services/Settings'
 import firebase from './services/firebase'
 
-function App() {
+function App(props) {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState("")
+
   console.log("app rendered")
   //Add a realtime listener
   firebase.auth.onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
       setIsLoggedIn(true)
+      setUser(firebaseUser.email)
       console.log("firebaseUser:", firebaseUser);
     } else {
+      setUser("")
       setIsLoggedIn(false)
     }
   });
 
   console.log("App: isloggedin", isLoggedIn)
-  let pageRender
-  if (isLoggedIn) {
-    pageRender = (
+
+  return (
+    <div class="container">
+      
       <BrowserRouter>
-        <Navbar isLoggedIn={isLoggedIn} />
+        { !user ? <Redirect to="/signin" /> : <Redirect to="/landing" />}
+        <Navbar isLoggedIn={isLoggedIn} user={user} />
         <Switch>
-          {/* Pass userid into Route */}
           <Route path='/landing' component={Landing} />
           <Route path='/upload' component={MusicFileForm} />
           <Route path='/settings' component={Settings} />
+          <Route path='/signin' component={SignIn} />
+          <Route path='/signup' component={SignUp} />
           <Route path='/signout' component={SignOut} />
           <Route path='/recorder' component={Recorder} />
           <Route path="*" component={Landing} />
-          <Route
+          {/* <Route
             path='/signout'
             render={(props) => <SignOut {...props} isLoggedIn="true" />}
-          />
+          /> */}
         </Switch>
       </BrowserRouter>
-    )
-  } else {
-    pageRender =
-      <BrowserRouter>
-        <Navbar />
-        <Switch>
-          <Route path='/landing' component={Landing} />
-          <Route path='/signin' component={SignIn} />
-          <Route path='/signup' component={SignUp} />
-          <Route path="*" component={Landing} />
-        </Switch>
-      </BrowserRouter>
-  }
-
-  return (
-    <div className="App">
-      <div class="container">
-        <Header />
-        {pageRender}
-      </div>
     </div>
   );
 }
