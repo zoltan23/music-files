@@ -85,7 +85,7 @@ function MusicFileForm() {
     
   }
   return (
-    <section>
+    <div>
       <div class="card">
         <div class="card-body">
           <form className="form-inline justify-content-center" onSubmit={submitHandler}>
@@ -110,7 +110,7 @@ function MusicFileForm() {
       </div>
       <div>Filename: {filePath} </div>
       <div><MusicFileList userId={userId} /></div>
-    </section>
+    </div>
   )
 }
 export default MusicFileForm
