@@ -11,19 +11,22 @@ import Recorder from './components/Recorder'
 import SignIn from './components/SignIn'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Settings from './services/Settings'
-import firebase from './services/firebase'
+import { auth } from './services/firebase'
+import ResetPassword from './components/ResetPassword';
 
 function App(props) {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState("")
+  const [uid, setUid] = useState("")
 
-  console.log("app rendered")
+  console.log("app rendereded")
   //Add a realtime listener
-  firebase.auth.onAuthStateChanged(firebaseUser => {
+  auth.onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
       setIsLoggedIn(true)
       setUser(firebaseUser.email)
+      setUid(firebaseUser.uid)
       console.log("firebaseUser:", firebaseUser);
     } else {
       setUser("")
@@ -42,11 +45,16 @@ function App(props) {
         <Switch>
           <Route path='/landing' component={Landing} />
           <Route path='/upload' component={MusicFileForm} />
-          <Route path='/settings' component={Settings} />
+          {/* <Route path='/settings' component={Settings} /> */}
+          <Route 
+            path='/settings' 
+            render={props => <Settings {...props} isLoggedIn="true" uid={uid} />}
+            />
           <Route path='/signin' component={SignIn} />
           <Route path='/signup' component={SignUp} />
           <Route path='/signout' component={SignOut} />
           <Route path='/recorder' component={Recorder} />
+          <Route path='/reset' component={ResetPassword} />
           <Route path="*" component={Landing} />
           {/* <Route
             path='/signout'
