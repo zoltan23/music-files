@@ -6,7 +6,8 @@ class Recorder extends Component {
         super(props)
         this.state = {
             note: "G",
-            pitch: ""
+            pitch: "",
+            audioSrc: "/audio/BabyElephantWalk60.wav"
         }
         this.createVisualization = this.createVisualization.bind(this)
     }
@@ -15,14 +16,28 @@ class Recorder extends Component {
         this.createVisualization()
     }
 
-    createVisualization() {
-        let audioContext = new AudioContext();
+    // async useAudioSource() {
+    //     let audioContext = this.audioContext
+    //     if (audioContext) await audioContext.close()
+    //     audioContext = new AudioContext();
+    //     let audio = this.refs.audio;
+    //     audio.crossOrigin = "anonymous";
+
+    //     let audioSrc = audioContext.createMediaElementSource(audio);
+    //     this.audioContext = audioContext
+    //     this.createVisualization(audioSrc, audioContext)
+    // }
+
+    async createVisualization() {
+        const audioContext = new AudioContext();
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        let audioSrc = audioContext.createMediaStreamSource(stream);
+        
         let analyser = audioContext.createAnalyser();
+
         let canvas = this.refs.analyzerCanvas;
         let ctx = canvas.getContext('2d');
-        let audio = this.refs.audio;
-        audio.crossOrigin = "anonymous";
-        let audioSrc = audioContext.createMediaElementSource(audio);
+
         audioSrc.connect(analyser);
         audioSrc.connect(audioContext.destination);
         analyser.connect(audioContext.destination);
@@ -171,16 +186,16 @@ class Recorder extends Component {
         updatePitch()
     }
 
-
-
     render() {
         return (
             <div>
                 <h2>Recorder</h2>
-
+                {/* <button onClick={this.useAudioSource} >Use Audio Source</button> */}
+                {/* <button onClick={this.useRecorder} >Record</button> */}
+                
                 <div className="flex-container">
                     <div>
-                       
+
                         <div id="mp3_player">
                             <div id="audio_box">
                                 <audio
@@ -189,7 +204,7 @@ class Recorder extends Component {
                                     controls={true}
                                     //this is the link to my song url feel free to use it or replace it with your own
                                     // src={"https://p.scdn.co/mp3-preview/e4a8f30ca62b4d2a129cc4df76de66f43e12fa3f?cid=null"}
-                                    src={"/audio/BabyElephantWalk60.wav"}
+                                    src={this.state.audioSrc}
                                 >
                                 </audio>
                             </div>
