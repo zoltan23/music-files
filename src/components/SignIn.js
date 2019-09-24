@@ -1,12 +1,8 @@
 import React, { useState } from 'react'
-import { db, storage, auth } from '../services/firebase'
-import { Redirect } from 'react-router-dom'
-//import firebase from '../services/firebase'
+import { auth } from '../services/firebase'
 import './SignIn.css'
-import ResetPassword from './ResetPassword'
 
-
-const SignIn = () => {
+const SignIn = (props) => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -25,9 +21,11 @@ const SignIn = () => {
             // An error happened.
         });
         setRenderFlag(false)
+
+        setTimeout(() =>{
+            props.history.push('/landing')
+        }, 5000)
     }
-
-
 
     const form = <form className="form-signin">
         <div className="text-center mb-4">
@@ -53,8 +51,8 @@ const SignIn = () => {
     </form>
 
     const reset = <div>
-        <p>An email has been sent to reset your password!</p>
-    </div>
+        <p>An email has been sent to reset your password. You will be redirected to the hompage shortly.</p>
+    </div> 
 
     const html = renderFlag ? form : reset
     return (
