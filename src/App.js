@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-//import './App.css';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
-import LoginPage from './components/LoginPage';
 import Navbar from './components/layout/Navbar'
 import Landing from './components/Landing'
-import Header from './components/Header'
 import SignOut from './components/SignOut'
 import SignUp from './components/SignUp'
 import Recorder from './components/Recorder'
