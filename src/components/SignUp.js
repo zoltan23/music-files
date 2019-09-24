@@ -74,9 +74,8 @@ const SignUp = () => {
                     </select>
                 </div>
                 <div className="form-group col-md-5">
-                    <span className="form-inline justify-content-center">Number of years of experience:</span>
-                </div>
-                <div className="form-group col-md-1">
+          
+                    <label>Number of years of experience:</label>
                     <input className="" type="number" name="quantity" min="1" max="40" defaultValue="0" onChange={getExperience}></input>
                 </div>
             </div>
