@@ -106,7 +106,7 @@ const Settings = (props) => {
     }
 
     const isDisabled = () => {
-        return (firstName && lastName && email && updateChoosePassword && updateConfirmPassword && instrument && experience) ? false : true
+        return (firstName && lastName && email && instrument && experience) ? false : true
     }
 
     const updateUserInfo = (e) => {
