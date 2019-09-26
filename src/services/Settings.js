@@ -12,7 +12,6 @@ const Settings = (props) => {
     const [updateConfirmPassword, setUpdateConfirmPassword] = useState('')
     const [instrument, setInstrument] = useState('')
     const [experience, setExperience] = useState('')
-    //const [uid, setUid] = useState(props.uid)
     const [docId, setDocId] = useState('')
 
     //Validation flag variables
@@ -158,7 +157,7 @@ const Settings = (props) => {
             <div className="form-row">
                 <div class="col-md-6">
                     <label for="validationServer03">Email</label>
-                    <input className={getValidString(isEmailValid)} type="email" id="email" placeholder="Email" onChange={validateEmail} value={email} required />
+                    <input className={getValidString(isEmailValid)} type="email" id="email" placeholder="Email" onChange={validateEmail} value={email} autoComplete="off" required />
                     <div class="invalid-feedback">
                         Please provide a valid email.
             </div>
