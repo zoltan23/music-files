@@ -30,7 +30,7 @@ const SignUp = () => {
     }
 
     const validateLastName = (e) => {
-        //setIsLastNameValid(e.target.value.length > 0)
+        setIsLastNameValid(e.target.value.length > 0)
         setLastName(e.target.value)
     }
 
@@ -39,11 +39,11 @@ const SignUp = () => {
         setEmail(e.target.value)
     }
     const validateChoosePassword = (e) => {
-        setIsChoosePasswordValid(e.target.value.length >= 3)
+        setIsChoosePasswordValid(e.target.value.length >= 6)
         setChoosePassword(e.target.value)
     }
     const validateConfirmPassword = (e) => {
-        setIsConfirmPasswordValid((e.target.value.length >= 3) && (e.target.value === choosePassword))
+        setIsConfirmPasswordValid((e.target.value.length >= 6) && (e.target.value === choosePassword))
         setConfirmPassword(e.target.value)
     }
 
@@ -67,10 +67,8 @@ const SignUp = () => {
         }
     }
 
-
     const isDisabled = () => {
         return (firstName && lastName && email && choosePassword && instrument && experience && (choosePassword === confirmPassword)) ? false : true
-
     }
 
     const handleSignUp = (e) => {
@@ -89,12 +87,13 @@ const SignUp = () => {
             }).catch(function (error) {
                 console.log("error", error)
                 setFirebaseError(error)
-            })       
+            })
     }
 
     const getValidString = (stateBool) => {
         return stateBool ? "form-control is-valid" : "form-control is-invalid"
     }
+    
     const viewFirebaseError = () => {
         if (firebaseError) {
             console.log("Firebase error", firebaseError)
@@ -103,7 +102,7 @@ const SignUp = () => {
                     {firebaseError.message}
                 </div>
             )
-        } 
+        }
     }
 
     return (
@@ -136,7 +135,7 @@ const SignUp = () => {
             </div>
             <div className="form-row">
                 <div class="col-md-6 mb-3">
-                    <label for="validationServer03">Choose Password</label>
+                    <label for="validationServer03">Choose Password (must be at least 6 characters long)</label>
                     <input className={getValidString(isChoosePasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateChoosePassword} />
                     <div class={"invalid-feedback"}>
                         Please provide a valid password.
@@ -186,8 +185,6 @@ const SignUp = () => {
             </div>
             <button className="btn btn-dark" disabled={isDisabled()} onClick={handleSignUp}>Sign Up</button>
         </div>
-
-    )
-}
+    )}
 
 export default SignUp
