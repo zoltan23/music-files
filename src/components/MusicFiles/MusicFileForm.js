@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../../services/firebase'
 import './MusicFileForm.css'
-import './MusicUpload'
 import MusicFileList from './MusicFileList'
 import firebase from '../../services/firebase'
 import { v4 } from 'uuid';
@@ -10,7 +9,7 @@ import { v4 } from 'uuid';
 function MusicFileForm() {
   var storageRef, file, rnd, fileref, storagePath
   const fileInput = useRef();
-  //State varialbes
+  //State varialbles
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userId, setUserId] = useState('')
   const [filePath, setFilePath] = useState('')
@@ -18,7 +17,7 @@ function MusicFileForm() {
   const [note, setNote] = useState('')
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState({})
-
+  const [isUploaded, setIsUploaded] = useState(false)
   
   let uid
   console.log("firebase auth id: ", uid)
@@ -45,7 +44,7 @@ function MusicFileForm() {
       rnd = v4()
       console.log("rnd", rnd)
       console.log("file name########", file.name)
-      storagePath = `football_pics/${uid}/${rnd}.wav`
+      storagePath = `music_files/${uid}/${rnd}.wav`
       storageRef = firebase.storage.ref(storagePath);
       var task = storageRef.put(file)
       task.then(s => console.log('sssssss', s))
@@ -79,22 +78,26 @@ function MusicFileForm() {
             note: note
           }).then(s => {
             fileInput.current.value = null
-          });
-           
+            setIsUploaded(false)
+          });           
           console.log("addFile filename", filePath)
         }
       );
     })
   }
+
   const getNote = e => {
     setNote(e.target.options[e.target.selectedIndex].text)
   }
+
   const handleChange = e => {
     e.preventDefault();
     const files = e.target.files
     let obj = { files: files, value: e.target.value }
     setFiles(obj);    
+    setIsUploaded(true)
   }
+
   return (
     <div>
       <div class="card">
@@ -114,7 +117,7 @@ function MusicFileForm() {
               </select>
             </div>            
             <div className="form-group mr-2">
-              <button className="btn btn-primary" type="submit" onClick={addFile}>Upload File</button>
+              <button className="btn btn-primary" type="submit" disabled={(isUploaded && note) ? false : true} onClick={addFile}>Upload File</button>
             </div>
           </form>
         </div>
