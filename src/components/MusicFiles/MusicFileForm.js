@@ -44,7 +44,7 @@ function MusicFileForm() {
       rnd = v4()
       console.log("rnd", rnd)
       console.log("file name########", file.name)
-      storagePath = `football_pics/${uid}/${rnd}.wav`
+      storagePath = `music_files/${uid}/${rnd}.wav`
       storageRef = firebase.storage.ref(storagePath);
       var task = storageRef.put(file)
       task.then(s => console.log('sssssss', s))
@@ -64,7 +64,7 @@ function MusicFileForm() {
           // callbackSetFileName(storagePath)
        
           setFileName(file.name)
-          console.log("fileInput.current.value ******", fileInput.current.value)
+          console.log("fileInput.current.value", fileInput.current.value)
           
           const fileNameTemp = file.name
           console.log("storage PATH", storageRef.location.path)       
