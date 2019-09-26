@@ -7,18 +7,20 @@ const SignIn = (props) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [renderFlag, setRenderFlag] = useState(true)
+    const [firebaseError, setFirebaseError] = useState(false)
 
     const handleSignIn = (e) => {
         e.preventDefault()
         auth.signInWithEmailAndPassword(email, password)
             .then(console.log("user signed in!!!", auth.currentUser))
+            .catch(error =>  setFirebaseError(error))
     }
 
     const handlePasswordReset = (e) => {
         e.preventDefault()
         auth.sendPasswordResetEmail(email).then(function () {
         }).catch(function (error) {
-            // An error happened.
+
         });
         setRenderFlag(false)
 
@@ -27,7 +29,19 @@ const SignIn = (props) => {
         }, 5000)
     }
 
+    const viewFirebaseError = () => {
+        if (firebaseError) {
+            console.log("Firebase error", firebaseError)
+            return (
+                <div class="alert alert-danger" role="alert">
+                    {firebaseError.message}
+                </div>
+            )
+        } 
+    }
+
     const form = <form className="form-signin">
+        {viewFirebaseError()}
         <div className="text-center mb-4">
             <img className="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
             <h1 className="h3 mb-3 font-weight-normal">Jam with our Band</h1>

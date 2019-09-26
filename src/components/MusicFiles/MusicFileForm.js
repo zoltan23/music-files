@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import Card from '../UI/Card'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../../services/firebase'
 import './MusicFileForm.css'
@@ -7,7 +6,7 @@ import './MusicUpload'
 import MusicFileList from './MusicFileList'
 import firebase from '../../services/firebase'
 import { v4 } from 'uuid';
-import { callbackify } from 'util';
+
 function MusicFileForm() {
   var storageRef, file, rnd, fileref, storagePath
   const fileInput = useRef();
@@ -19,11 +18,14 @@ function MusicFileForm() {
   const [note, setNote] = useState('')
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState({})
-  let uid = firebase.auth.currentUser.uid
+
+  
+  let uid
   console.log("firebase auth id: ", uid)
   firebase.auth.onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
       console.log('id', firebaseUser.uid)
+      uid = firebase.auth.currentUser.uid
       setIsLoggedIn(true)
       setUserId(firebaseUser.uid)
       console.log("firebaseUSer", firebaseUser);
@@ -42,7 +44,8 @@ function MusicFileForm() {
       file = files.files[k]
       rnd = v4()
       console.log("rnd", rnd)
-      storagePath = `football_pics/${uid}/${rnd}_${file.name}`
+      console.log("file name########", file.name)
+      storagePath = `football_pics/${uid}/${rnd}.wav`
       storageRef = firebase.storage.ref(storagePath);
       var task = storageRef.put(file)
       task.then(s => console.log('sssssss', s))
@@ -58,17 +61,26 @@ function MusicFileForm() {
         function complete(c) {
           console.log("upload complete");
           setProgress(0)
-          console.log("C upload completed:", c)
+          console.log("fileInput:", fileInput)
           // callbackSetFileName(storagePath)
-          setFileName(fileInput.current.value)
-          setFilePath(storagePath)
-          fileInput.current.value = null
+       
+          setFileName(file.name)
+          console.log("fileInput.current.value", fileInput.current.value)
+          
+          const fileNameTemp = file.name
+          console.log("storage PATH", storageRef.location.path)       
+          // setFilePath(storageRef.location.path)
+          const filePathTemp = storageRef.location.path
+          console.log("filepath", filePathTemp)
           db.collection("music").doc(userId).collection('musicId').doc().set({
             //db.collection(userId).doc().set({
-            filePath: filePath,
-            filename: filename,
+            filePath: filePathTemp,
+            filename: fileNameTemp,
             note: note
+          }).then(s => {
+            fileInput.current.value = null
           });
+           
           console.log("addFile filename", filePath)
         }
       );
@@ -81,8 +93,7 @@ function MusicFileForm() {
     e.preventDefault();
     const files = e.target.files
     let obj = { files: files, value: e.target.value }
-    setFiles(obj);
-    
+    setFiles(obj);    
   }
   return (
     <div>
@@ -101,14 +112,13 @@ function MusicFileForm() {
                 <option value="F">Concert F-natural</option>
                 <option value="F#">Concert F-sharp</option>
               </select>
-            </div>
+            </div>            
             <div className="form-group mr-2">
               <button className="btn btn-primary" type="submit" onClick={addFile}>Upload File</button>
             </div>
           </form>
         </div>
       </div>
-      <div>Filename: {filePath} </div>
       <div><MusicFileList userId={userId} /></div>
     </div>
   )
