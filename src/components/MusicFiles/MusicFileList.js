@@ -57,12 +57,21 @@ const MusicFileList = (props) => {
         setAuthId('')
       }
     });
-
   }, [])
+
+  const listHeader = () => {
+    if(musicFiles.length > 0) {
+      return (
+        <div>
+            <h2>Uploaded Files</h2>
+        </div>
+      )
+    }
+  }
   console.log('musicFIles', musicFiles)
   return (
     <div className="container">
-      <h2>Uploaded Files</h2>
+      {listHeader()}
       {musicFiles.map(file => (
         <div className="row h-100 justify-content-center align-items-center" key={file.id} >
           <div className="col-sm-3">Filename: <a href={file.url}>{file.filename}</a></div>
@@ -73,10 +82,6 @@ const MusicFileList = (props) => {
             </audio>&nbsp; &nbsp;
             <FontAwesomeIcon className="fa-3x align" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id)} />
           </div>
-          {/* <div className="col-sm-1 justify-content-center">
-            
-          </div> */}
-
         </div>
       ))}
     </div>

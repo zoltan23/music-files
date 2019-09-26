@@ -4,7 +4,7 @@ import React from 'react'
 const Landing = () => {
 
     return (
-        <div className="container bg-warning">
+        <div className="container">
             <p>
                 We are TeamNeo and we are participating in the <span><a href="https://www.utahgeekevents.com/competition/">Smart Cities and Connected Communities</a></span> data science competition.  In short,
                 the purpose of the competition is to focus on smart cities and connected communities with 
