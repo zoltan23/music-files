@@ -1,3 +1,8 @@
+audio {
+	display: none;
+	visibility: collapse;
+}
+
 .flex-container {
 	display: flex;
 	justify-content: center;
