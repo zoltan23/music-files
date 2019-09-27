@@ -7,13 +7,35 @@ class Recorder extends Component {
         this.state = {
             note: "G",
             pitch: "",
-            audioSrc: "/audio/BabyElephantWalk60.wav"
+            audioSrc: "",
+            audioStream: null,
+            micInput: ''
         }
         this.createVisualization = this.createVisualization.bind(this)
+        this.componentDidMount = this.componentDidMount.bind(this)
+        this.componentWillUnmount = this.componentWillUnmount.bind(this)
+        this.closeAudioStream = this.closeAudioStream.bind(this)
+
+        console.log('constructor()')
     }
 
     componentDidMount() {
-        this.createVisualization()
+        console.log('componentDidMount()')
+        this.getAudioStream()
+            .then(audio => {
+                console.log('track mounted :', audio.getTracks()[0].label)
+                this.setState({ audioStream: audio, micLabel: audio.getTracks()[0].label })
+
+                this.createVisualization()
+            })
+            // Todo: add error
+            .catch(e => console.log('error getting media', e))
+    }
+
+
+    componentWillUnmount() {
+        console.log('componentWillUnmount()')
+        this.closeAudioStream()
     }
 
     // async useAudioSource() {
@@ -28,162 +50,187 @@ class Recorder extends Component {
     //     this.createVisualization(audioSrc, audioContext)
     // }
 
+    closeAudioStream() {
+        if (this.state.audioStream) {
+            this.state.audioStream.getTracks().forEach(track => { console.log('track', track); track.stop() });
+        }
+        this.setState({ audio: null });
+    }
+
+    async getAudioStream() {
+        console.log('getAudioStream()')
+        let audio
+        if (!this.state.audioStream) {
+            audio = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        } else {
+            audio = this.state.audioStream
+        }
+        return audio
+    }
+
     async createVisualization() {
-        const audioContext = new AudioContext();
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-        let audioSrc = audioContext.createMediaStreamSource(stream);
-        
-        let analyser = audioContext.createAnalyser();
+        try {
+            console.log('createVisualization()')
 
-        let canvas = this.refs.analyzerCanvas;
-        let ctx = canvas.getContext('2d');
+            const audioContext = new AudioContext();
 
-        audioSrc.connect(analyser);
-        audioSrc.connect(audioContext.destination);
-        analyser.connect(audioContext.destination);
+            let audioSrc = audioContext.createMediaStreamSource(await this.getAudioStream());
+            let analyser = audioContext.createAnalyser();
 
-        var rafID = null;
-        var tracks = null;
-        var buflen = 1024;
-        var buf = new Float32Array(buflen);
-        var MIN_SAMPLES = 0;  // will be initialized when AudioContext is created.
-        var GOOD_ENOUGH_CORRELATION = 0.9; // this is the "bar" for how close a correlation needs to be
+            let canvas = this.refs.analyzerCanvas;
+            let ctx = canvas.getContext('2d');
 
-        var detectorElem = this.refs.detector
-        var canvasElem = this.refs.output
-        // var pitchElem = this.refs.pitch
-        // var noteElem = this.refs.note
-        var detuneElem = this.refs.detune
-        var detuneAmount = this.refs.detune_amt
-        var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+            audioSrc.connect(analyser);
+            audioSrc.connect(audioContext.destination);
+            analyser.connect(audioContext.destination);
 
-        var _this = this
+            var rafID = null;
+            var tracks = null;
+            var buflen = 1024;
+            var buf = new Float32Array(buflen);
+            var MIN_SAMPLES = 0;  // will be initialized when AudioContext is created.
+            var GOOD_ENOUGH_CORRELATION = 0.9; // this is the "bar" for how close a correlation needs to be
 
-        function noteFromPitch(frequency) {
-            var noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
-            return Math.round(noteNum) + 69;
-        }
+            var detectorElem = this.refs.detector
+            var canvasElem = this.refs.output
+            // var pitchElem = this.refs.pitch
+            // var noteElem = this.refs.note
+            var detuneElem = this.refs.detune
+            var detuneAmount = this.refs.detune_amt
+            var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
-        function frequencyFromNoteNumber(note) {
-            return 440 * Math.pow(2, (note - 69) / 12);
-        }
+            var _this = this
 
-        function centsOffFromPitch(frequency, note) {
-            return Math.floor(1200 * Math.log(frequency / frequencyFromNoteNumber(note)) / Math.log(2));
-        }
-
-        function renderFrame() {
-            let freqData = new Uint8Array(analyser.frequencyBinCount)
-            requestAnimationFrame(renderFrame)
-            analyser.getByteFrequencyData(freqData)
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-            // console.log(freqData)
-            ctx.fillStyle = '#9933ff';
-            let bars = 100;
-            for (var i = 0; i < bars; i++) {
-                let bar_x = i * 3;
-                let bar_width = 2;
-                let bar_height = -(freqData[i] / 2);
-                ctx.fillRect(bar_x, canvas.height, bar_width, bar_height)
+            function noteFromPitch(frequency) {
+                var noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
+                return Math.round(noteNum) + 69;
             }
-        }
 
-        function autoCorrelate(buf, sampleRate) {
-            var SIZE = buf.length;
-            var MAX_SAMPLES = Math.floor(SIZE / 2);
-            var best_offset = -1;
-            var best_correlation = 0;
-            var rms = 0;
-            var foundGoodCorrelation = false;
-            var correlations = new Array(MAX_SAMPLES);
-
-            for (var i = 0; i < SIZE; i++) {
-                var val = buf[i];
-                rms += val * val;
+            function frequencyFromNoteNumber(note) {
+                return 440 * Math.pow(2, (note - 69) / 12);
             }
-            rms = Math.sqrt(rms / SIZE);
-            if (rms < 0.01) // not enough signal
-                return -1;
 
-            var lastCorrelation = 1;
-            for (var offset = MIN_SAMPLES; offset < MAX_SAMPLES; offset++) {
-                var correlation = 0;
+            function centsOffFromPitch(frequency, note) {
+                return Math.floor(1200 * Math.log(frequency / frequencyFromNoteNumber(note)) / Math.log(2));
+            }
 
-                for (var i = 0; i < MAX_SAMPLES; i++) {
-                    correlation += Math.abs((buf[i]) - (buf[i + offset]));
+            function renderFrame() {
+                let freqData = new Uint8Array(analyser.frequencyBinCount)
+                requestAnimationFrame(renderFrame)
+                analyser.getByteFrequencyData(freqData)
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                // console.log(freqData)
+                ctx.fillStyle = '#9933ff';
+                let bars = 100;
+                for (var i = 0; i < bars; i++) {
+                    let bar_x = i * 3;
+                    let bar_width = 2;
+                    let bar_height = -(freqData[i] / 2);
+                    ctx.fillRect(bar_x, canvas.height, bar_width, bar_height)
                 }
-                correlation = 1 - (correlation / MAX_SAMPLES);
-                correlations[offset] = correlation; // store it, for the tweaking we need to do below.
-                if ((correlation > GOOD_ENOUGH_CORRELATION) && (correlation > lastCorrelation)) {
-                    foundGoodCorrelation = true;
-                    if (correlation > best_correlation) {
-                        best_correlation = correlation;
-                        best_offset = offset;
+            }
+
+            function autoCorrelate(buf, sampleRate) {
+                var SIZE = buf.length;
+                var MAX_SAMPLES = Math.floor(SIZE / 2);
+                var best_offset = -1;
+                var best_correlation = 0;
+                var rms = 0;
+                var foundGoodCorrelation = false;
+                var correlations = new Array(MAX_SAMPLES);
+
+                for (var i = 0; i < SIZE; i++) {
+                    var val = buf[i];
+                    rms += val * val;
+                }
+                rms = Math.sqrt(rms / SIZE);
+                if (rms < 0.01) // not enough signal
+                    return -1;
+
+                var lastCorrelation = 1;
+                for (var offset = MIN_SAMPLES; offset < MAX_SAMPLES; offset++) {
+                    var correlation = 0;
+
+                    for (var i = 0; i < MAX_SAMPLES; i++) {
+                        correlation += Math.abs((buf[i]) - (buf[i + offset]));
                     }
-                } else if (foundGoodCorrelation) {
-                    // short-circuit - we found a good correlation, then a bad one, so we'd just be seeing copies from here.
-                    // Now we need to tweak the offset - by interpolating between the values to the left and right of the
-                    // best offset, and shifting it a bit.  This is complex, and HACKY in this code (happy to take PRs!) -
-                    // we need to do a curve fit on correlations[] around best_offset in order to better determine precise
-                    // (anti-aliased) offset.
+                    correlation = 1 - (correlation / MAX_SAMPLES);
+                    correlations[offset] = correlation; // store it, for the tweaking we need to do below.
+                    if ((correlation > GOOD_ENOUGH_CORRELATION) && (correlation > lastCorrelation)) {
+                        foundGoodCorrelation = true;
+                        if (correlation > best_correlation) {
+                            best_correlation = correlation;
+                            best_offset = offset;
+                        }
+                    } else if (foundGoodCorrelation) {
+                        // short-circuit - we found a good correlation, then a bad one, so we'd just be seeing copies from here.
+                        // Now we need to tweak the offset - by interpolating between the values to the left and right of the
+                        // best offset, and shifting it a bit.  This is complex, and HACKY in this code (happy to take PRs!) -
+                        // we need to do a curve fit on correlations[] around best_offset in order to better determine precise
+                        // (anti-aliased) offset.
 
-                    // we know best_offset >=1, 
-                    // since foundGoodCorrelation cannot go to true until the second pass (offset=1), and 
-                    // we can't drop into this clause until the following pass (else if).
-                    var shift = (correlations[best_offset + 1] - correlations[best_offset - 1]) / correlations[best_offset];
-                    return sampleRate / (best_offset + (8 * shift));
+                        // we know best_offset >=1, 
+                        // since foundGoodCorrelation cannot go to true until the second pass (offset=1), and 
+                        // we can't drop into this clause until the following pass (else if).
+                        var shift = (correlations[best_offset + 1] - correlations[best_offset - 1]) / correlations[best_offset];
+                        return sampleRate / (best_offset + (8 * shift));
+                    }
+                    lastCorrelation = correlation;
                 }
-                lastCorrelation = correlation;
+                if (best_correlation > 0.01) {
+                    // console.log("f = " + sampleRate/best_offset + "Hz (rms: " + rms + " confidence: " + best_correlation + ")")
+                    return sampleRate / best_offset;
+                }
+                return -1;
+                //	var best_frequency = sampleRate/best_offset;
             }
-            if (best_correlation > 0.01) {
-                // console.log("f = " + sampleRate/best_offset + "Hz (rms: " + rms + " confidence: " + best_correlation + ")")
-                return sampleRate / best_offset;
-            }
-            return -1;
-            //	var best_frequency = sampleRate/best_offset;
-        }
 
-        function updatePitch(time) {
-            // var cycles = new Array();
-            analyser.getFloatTimeDomainData(buf);
-            var ac = autoCorrelate(buf, audioContext.sampleRate);
+            function updatePitch(time) {
+                // var cycles = new Array();
+                analyser.getFloatTimeDomainData(buf);
+                var ac = autoCorrelate(buf, audioContext.sampleRate);
 
-            if (ac == -1) {
-                detectorElem.className = "vague";
-                // pitchElem.innerText = "--";
-                _this.setState({ pitch: "-" })
-                _this.setState({ note: "-" })
-                detuneElem.className = "";
-                detuneAmount.innerText = "--";
-            } else {
-                detectorElem.className = "confident";
-                const pitch = ac;
-                // pitchElem.innerText = Math.round(pitch);
-                _this.setState({ pitch: Math.round(pitch) })
-                var note = noteFromPitch(pitch);
-                console.log('note', note)
-                // noteElem.innerHTML = noteStrings[note % 12];
-                _this.setState({ note: noteStrings[note % 12] })
-                var detune = centsOffFromPitch(pitch, note);
-                if (detune == 0) {
+                if (ac == -1) {
+                    detectorElem.className = "vague";
+                    // pitchElem.innerText = "--";
+                    _this.setState({ pitch: "-" })
+                    _this.setState({ note: "-" })
                     detuneElem.className = "";
-                    detuneAmount.innerHTML = "--";
+                    detuneAmount.innerText = "--";
                 } else {
-                    if (detune < 0)
-                        detuneElem.className = "flat";
-                    else
-                        detuneElem.className = "sharp";
-                    detuneAmount.innerHTML = Math.abs(detune);
+                    detectorElem.className = "confident";
+                    const pitch = ac;
+                    // pitchElem.innerText = Math.round(pitch);
+                    _this.setState({ pitch: Math.round(pitch) })
+                    var note = noteFromPitch(pitch);
+                    // console.log('note', note)
+                    // noteElem.innerHTML = noteStrings[note % 12];
+                    _this.setState({ note: noteStrings[note % 12] })
+                    var detune = centsOffFromPitch(pitch, note);
+                    if (detune == 0) {
+                        detuneElem.className = "";
+                        detuneAmount.innerHTML = "--";
+                    } else {
+                        if (detune < 0)
+                            detuneElem.className = "flat";
+                        else
+                            detuneElem.className = "sharp";
+                        detuneAmount.innerHTML = Math.abs(detune);
+                    }
                 }
+
+                if (!window.requestAnimationFrame)
+                    window.requestAnimationFrame = window.webkitRequestAnimationFrame;
+                rafID = window.requestAnimationFrame(updatePitch);
             }
 
-            if (!window.requestAnimationFrame)
-                window.requestAnimationFrame = window.webkitRequestAnimationFrame;
-            rafID = window.requestAnimationFrame(updatePitch);
+            renderFrame()
+            updatePitch()
+        } catch (e) {
+            console.log('error createVisualization()', e)
+            this.closeAudioStream() 
         }
 
-        renderFrame()
-        updatePitch()
     }
 
     render() {
@@ -192,10 +239,10 @@ class Recorder extends Component {
                 <h2>Recorder</h2>
                 {/* <button onClick={this.useAudioSource} >Use Audio Source</button> */}
                 {/* <button onClick={this.useRecorder} >Record</button> */}
-                
+
                 <div className="flex-container">
                     <div>
-
+                        <div>{this.state.micLabel}</div>
                         <div id="mp3_player">
                             <div id="audio_box">
                                 <audio
