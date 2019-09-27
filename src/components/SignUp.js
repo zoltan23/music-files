@@ -10,8 +10,9 @@ const SignUp = () => {
     const [email, setEmail] = useState('')
     const [choosePassword, setChoosePassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [instrument, setInstrument] = useState('')
+    const [instrument, setInstrument] = useState('-- Please select your instrument. --')
     const [experience, setExperience] = useState('')
+    const [levelOfExperience, setLevelOfExperience] = useState('-- Please choose your level of experience. --')
 
     //Validation flag variables
     const [isFirstNameValid, setIsFirstNameValid] = useState(false)
@@ -22,6 +23,9 @@ const SignUp = () => {
     const [isInstrumentValid, setIsInstrumentValid] = useState(false)
     const [isExperienceValid, setIsExperienceValid] = useState(false)
     const [firebaseError, setFirebaseError] = useState(false)
+
+
+
 
 
     const validateFirstName = (e) => {
@@ -93,7 +97,7 @@ const SignUp = () => {
     const getValidString = (stateBool) => {
         return stateBool ? "form-control is-valid" : "form-control is-invalid"
     }
-    
+
     const viewFirebaseError = () => {
         if (firebaseError) {
             console.log("Firebase error", firebaseError)
@@ -105,86 +109,119 @@ const SignUp = () => {
         }
     }
 
+    const setExperienceLevel = (num) => {
+        const experience = [
+            '-- Please choose your level of experience. --',
+            'Beginner',
+            'Junior High',
+            'High School',
+            'College',
+            'Post Collegiate/Community Band',
+            'Professional'
+        ]
+        setLevelOfExperience(experience[num])
+        setIsExperienceValid(num >= 1)
+    }
+    const setInstrumentType = (num) => {
+        const instruments = [
+            '-- Please select your instrument. --',
+            'Trumpet',
+            'Clarinet',
+            'Saxophone',
+            'Trombone',
+            'Baritone',
+            'Tuba'
+        ]
+        setInstrument(instruments[num])
+        setIsInstrumentValid(num >= 1)
+    }
+
     return (
-        <div className="card">
-            {viewFirebaseError()}
-            <div className="form-row">
-                <div className="col-md-6 mb-3">
-                    <label for="validationServer03">First Name</label>
-                    <input className={getValidString(isFirstNameValid)} type="text" id="firstName" placeholder="First Name" onChange={validateFirstName} />
-                    <div className="valid-feedback">
-                        Looks good.
+        <form>
+            <div className="container">
+                {viewFirebaseError()}
+                <div className="form-row">
+                    <div className="col-md-6 mb-3">
+                        <label for="validationServer03">First Name</label>
+                        <input className={getValidString(isFirstNameValid)} type="text" id="firstName" placeholder="First Name" onChange={validateFirstName} />
+                        <div className="valid-feedback">
+                            Looks good.
+                        </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label for="validationServer03">Last Name</label>
+                        <input className={getValidString(isLasttNameValid)} type="text" id="lastName" placeholder="Last Name" onChange={validateLastName} />
+                        <div className="valid-feedback">
+                            Looks good.
             </div>
+                    </div>
                 </div>
-                <div className="col-md-6 mb-3">
-                    <label for="validationServer03">Last Name</label>
-                    <input className={getValidString(isLasttNameValid)} type="text" id="lastName" placeholder="Last Name" onChange={validateLastName} />
-                    <div className="valid-feedback">
-                        Looks good.
+                <div className="form-row">
+                    <div class="col-md-6">
+                        <label for="validationServer03">Email</label>
+                        <input className={getValidString(isEmailValid)} type="email" id="email" placeholder="Email" onChange={validateEmail} required />
+                        <div class="invalid-feedback">
+                            Please provide a valid email.
             </div>
+                    </div>
                 </div>
+                <div className="form-row">
+                    <div class="col-md-6 mb-3">
+                        <label for="validationServer03">Choose Password (must be at least 6 characters long)</label>
+                        <input className={getValidString(isChoosePasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateChoosePassword} />
+                        <div class={"invalid-feedback"}>
+                            Please provide a valid password.
             </div>
-            <div className="form-row">
-                <div class="col-md-6">
-                    <label for="validationServer03">Email</label>
-                    <input className={getValidString(isEmailValid)} type="email" id="email" placeholder="Email" onChange={validateEmail} required />
-                    <div class="invalid-feedback">
-                        Please provide a valid email.
-            </div>
+                    </div>
                 </div>
+                <div className="form-row">
+                    <div class="col-md-6 mb-3">
+                        <label for="validationServer03">Confirm Password</label>
+                        <input className={getValidString(isConfirmPasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateConfirmPassword} />
+                        <div class="invalid-feedback">
+                            Password does not match.
             </div>
-            <div className="form-row">
-                <div class="col-md-6 mb-3">
-                    <label for="validationServer03">Choose Password (must be at least 6 characters long)</label>
-                    <input className={getValidString(isChoosePasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateChoosePassword} />
-                    <div class={"invalid-feedback"}>
-                        Please provide a valid password.
-            </div>
+                    </div>
                 </div>
+                <div className="form-row">
+                    <div className="col-md-6 mb-3">
+                        <div className="dropdown" >
+                            <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isInstrumentValid)}`}  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {instrument}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(1)}>Trumpet</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(2)}>Clarinet</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(3)}>Saxophone</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(4)}>Trombone</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(5)}>Baritone</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(6)}>Tuba</a>
+                            </div>
+                            <div class="invalid-feedback">
+                            Please select your instrument.
             </div>
-            <div className="form-row">
-                <div class="col-md-6 mb-3">
-                    <label for="validationServer03">Confirm Password</label>
-                    <input className={getValidString(isConfirmPasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateConfirmPassword} />
-                    <div class="invalid-feedback">
-                        Password does not match.
-            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <div className="dropdown">
+                            <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isExperienceValid)}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {levelOfExperience}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(1)}>Beginner</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(2)}>Junior High</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(3)}>High School</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(4)}>College</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(5)}>Post Collegiate/Community Band</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(6)}>Professional</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <button className="btn btn-primary w-100" disabled={isDisabled()} onClick={handleSignUp}>Sign Up</button>
             </div>
-            <div className="form-row">
-                <div className="form-group col-md-6">
-                    <label>Please choose your instrument.</label>
-                    <select className={getValidString(isInstrumentValid)} onChange={validateInstrument}>
-                        <option defaultValue="0">Instrument used for recordings:</option>
-                        <option value="1">Trumpet</option>
-                        <option value="2">Clarinet</option>
-                        <option value="3">Saxophone</option>
-                        <option value="4">Trombone</option>
-                        <option value="5">Baritone</option>
-                        <option value="6">Tuba</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please choose your instrument.
-            </div>
-                </div>
-                <div className="form-group col-md-6">
-                    <label>Please select your level of experience.</label>
-                    <select className={getValidString(isExperienceValid)} onChange={validateExperience}>
-                        <option defaultValue="0">Level of experience</option>
-                        <option value="1">Beginner</option>
-                        <option value="2">Junior High</option>
-                        <option value="3">High School</option>
-                        <option value="4">College</option>
-                        <option value="5">Post Collegiate/Community Band</option>
-                        <option value="6">Professional</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please choose your level of experience.
-            </div>
-                </div>
-            </div>
-            <button className="btn btn-dark" disabled={isDisabled()} onClick={handleSignUp}>Sign Up</button>
-        </div>
-    )}
+        </form>
+    )
+}
 
 export default SignUp
