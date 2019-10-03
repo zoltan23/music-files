@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import firebase from '../services/firebase'
 import { db } from '../services/firebase'
+import "./SignUp.css"
 
 const SignUp = () => {
 
@@ -189,7 +190,7 @@ const SignUp = () => {
                             <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isInstrumentValid)}`}  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {instrument}
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="#" onClick={e => setInstrumentType(1)}>Trumpet</a>
                                 <a class="dropdown-item" href="#" onClick={e => setInstrumentType(2)}>Clarinet</a>
                                 <a class="dropdown-item" href="#" onClick={e => setInstrumentType(3)}>Saxophone</a>
@@ -207,7 +208,7 @@ const SignUp = () => {
                             <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isExperienceValid)}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {levelOfExperience}
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(1)}>Beginner</a>
                                 <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(2)}>Junior High</a>
                                 <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(3)}>High School</a>
@@ -220,7 +221,10 @@ const SignUp = () => {
                 </div>
                 <button className="btn btn-primary w-100" disabled={isDisabled()} onClick={handleSignUp}>Sign Up</button>
             </div>
+            <div class="bottom-padding"/>
+            
         </form>
+        
     )
 }
 
