@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './Recorder.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
+import "./Callout.css"
 
 class Recorder extends Component {
     constructor(props) {
@@ -9,14 +12,29 @@ class Recorder extends Component {
             pitch: "",
             audioSrc: "",
             audioStream: null,
-            micInput: ''
+            micInput: '',
+            showDetector: true,
+            //Timer
+            time: 0,
+            isOn: false,
+            start: 0,
+            toggleRecord: false,
+            countDown: 0,
+            timer: {},
+            time: 0,
+            timerStarted: false,
+            showThirtySecondCountDown : false
         }
         this.createVisualization = this.createVisualization.bind(this)
         this.componentDidMount = this.componentDidMount.bind(this)
         this.componentWillUnmount = this.componentWillUnmount.bind(this)
         this.closeAudioStream = this.closeAudioStream.bind(this)
+        this.clickRecord = this.clickRecord.bind(this)
 
-        console.log('constructor()')
+        this.countDownTimer = this.countDownTimer.bind(this)
+        this.stopTimer = this.stopTimer.bind(this)
+        this.clickStop = this.clickStop.bind(this)
+
     }
 
     componentDidMount() {
@@ -80,9 +98,11 @@ class Recorder extends Component {
             let canvas = this.refs.analyzerCanvas;
             let ctx = canvas.getContext('2d');
 
+            // analyser.smoothingTimeConstant = .01
+
             audioSrc.connect(analyser);
-            audioSrc.connect(audioContext.destination);
-            analyser.connect(audioContext.destination);
+            // audioSrc.connect(audioContext.destination);
+            // analyser.connect(audioContext.destination);
 
             var rafID = null;
             var tracks = null;
@@ -144,7 +164,7 @@ class Recorder extends Component {
                     rms += val * val;
                 }
                 rms = Math.sqrt(rms / SIZE);
-                if (rms < 0.01) // not enough signal
+                if (rms < 0.1) // not enough signal
                     return -1;
 
                 var lastCorrelation = 1;
@@ -228,48 +248,157 @@ class Recorder extends Component {
             updatePitch()
         } catch (e) {
             console.log('error createVisualization()', e)
-            this.closeAudioStream() 
+            this.closeAudioStream()
         }
 
     }
 
+    async clickRecord(e) {
+        e.preventDefault()
+        console.log('Record Pressed')
+        let _this = this
+        _this.setState({ showDetector: true, toggleRecord: true, showUpload : false, showThirtySecondCountDown : false })
+
+        console.log('starting counter')
+        this.setState({ showDetector: false })
+        await this.countDownTimer(5) // Wait 5 seconds
+        console.log('done with 5 second counter')
+        this.setState({ showThirtySecondCountDown : true, showDetector : true })
+        await this.countDownTimer(5) // Wait 5 seconds
+        console.log('done with 30 second counter')
+        this.setState({ showDetector: true, toggleRecord: false, showUpload : true, showThirtySecondCountDown : false })
+        
+
+    }
+
+    async stopTimer() {
+        return new Promise((resolve, reject) => {
+            this.setState({ showDetector: true, timerStarted: false, toggleRecord: false, showThirtySecondCountDown : false}, () => {
+                clearInterval(this.timer)
+                console.log('stop timer done')
+                resolve()
+            })
+        })
+    }
+
+    clickStop(e) {
+        this.setState({showUpload : false})
+        e.preventDefault()
+        this.stopTimer()
+    }
+
+
+    countDownTimer(seconds) {
+        const _this = this
+        _this.setState({ countDown: seconds, start: Date.now(), time: seconds, timerStarted: true, toggleRecord: true })
+        return new Promise((resolve, reject) => {
+            _this.timer = setInterval(async () => {
+
+                let milliseconds = Date.now() - this.state.start
+
+                const t = this.state.countDown - Math.round((milliseconds / 1000))
+
+                if (t <= 0 || !_this.state.timerStarted) {
+                    resolve()
+                } else {
+                    _this.setState({
+                        time: t
+                    })
+                }
+            }, 1000);
+        })
+    }
+
     render() {
+
         return (
             <div>
-                <h2>Recorder</h2>
-                {/* <button onClick={this.useAudioSource} >Use Audio Source</button> */}
-                {/* <button onClick={this.useRecorder} >Record</button> */}
+                <div className="container-fluid">
+                    <div class="row">
+                        <div id="col-12 accordion">
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Instructions
+                                        </button>
+                                    </h5>
+                                </div>
 
-                <div className="flex-container">
-                    <div>
-                        <div>{this.state.micLabel}</div>
-                        <div id="mp3_player">
-                            <div id="audio_box">
-                                <audio
-                                    ref="audio"
-                                    autoPlay={true}
-                                    controls={true}
-                                    //this is the link to my song url feel free to use it or replace it with your own
-                                    // src={"https://p.scdn.co/mp3-preview/e4a8f30ca62b4d2a129cc4df76de66f43e12fa3f?cid=null"}
-                                    src={this.state.audioSrc}
-                                >
-                                </audio>
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="bd-callout bd-callout-primary">
+                                            We do not stream live audio to our servers.
+                                    </div>
+                                        <p>
+                                            Record your instrument for at least 30 seconds.  When, pressing
+                                record, a count down timer will appear allowing you to setup your
+                                before playing.  After 30 seconds, a dialog box will appear for you
+                                to accept a recording.  Only audio information from the recording
+                                is ever sent back to our servers.  The live audio you see, is a
+                                visual representation of what your audio looks like.  To stop the mic, simply
+                                click off the tab.
+                                </p>
+                                    </div>
+                                </div>
                             </div>
-                            <canvas
-                                ref="analyzerCanvas"
-                                id="analyzer"
-                            >
-                            </canvas>
                         </div>
+                    </div>
 
-                        <div ref="detector" id="detector" class="vague">
-                            <div id="pitch">{this.state.pitch} Hz</div>
-                            <div id="note">{this.state.note}</div>
-                            <canvas ref="output" id="output" width="300" height="42"></canvas>
-                            <div ref="detune" id="detune"><span ref="detune_amt" id="detune_amt">--</span><span id="flat">cents &#9837;</span><span id="sharp">cents &#9839;</span></div>
+                    <div class="row no-gutters">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle btn-block " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {this.state.micLabel}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">{this.state.micLabel}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+
+                        <div >
+
+                            <div class="card-body">
+                                <div class="card-title">Notes</div>
+                                <div class="card-text">
+                                    <canvas
+                                        ref="analyzerCanvas"
+                                        id="analyzer"
+                                    >
+                                    </canvas>
+                                </div>
+                                <div class="card-body">
+                                    <span className={ this.state.showThirtySecondCountDown ? "" : "hidden" }>Play a long tone for {this.state.time}</span>
+                                    <div className={this.state.showDetector ? "" : "hidden"}>
+                                        <div ref="detector" id="detector" class="vague">
+                                            <div id="pitch">{this.state.pitch} Hz</div>
+                                            <div id="note">{this.state.note}</div>
+                                            <canvas ref="output" id="output" width="300" height="42"></canvas>
+                                            <div ref="detune" id="detune"><span ref="detune_amt" id="detune_amt">--</span><span id="flat">cents &#9837;</span><span id="sharp">cents &#9839;</span></div>
+                                        </div>
+                                    </div>
+                                    <div className={this.state.showDetector ? "hidden" : "count-down"} >
+                                        <div class="count-down-number">{this.state.time}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <a onClick={e => this.clickRecord(e)} href="#" class={this.state.toggleRecord ? 'hidden' : 'btn btn-danger btn-block'}><FontAwesomeIcon icon={faCircle} />&nbsp;Record</a>
+                        <a onClick={e => this.clickStop(e)} href="#" class={this.state.toggleRecord ? 'btn btn-danger btn-block' : 'hidden'}><FontAwesomeIcon icon={faCircle} />&nbsp;Stop</a>
+                    </div>
+                    <div class="col-6">
+                        <a href="#" class={this.state.showUpload ? 'btn btn-success btn-block' : 'hidden'} ><FontAwesomeIcon icon={faCloudUploadAlt} />&nbsp;Upload </a>
+                    </div>
+                </div>
+
+                <div class="bottom-padding" />
             </div>
 
         );

@@ -10,6 +10,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Settings from './services/Settings'
 import { auth } from './services/firebase'
 import ResetPassword from './components/ResetPassword';
+import "./App.css"
 
 function App(props) {
 
