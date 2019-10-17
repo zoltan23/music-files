@@ -3,6 +3,8 @@ import { db, storage, auth } from '../../services/firebase'
 import './MusicFileList.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMusic, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import Classify from './Classify.js'
+import '../../../src/icons/my-icons-collection/font/flaticon.css'
 
 let musicRef
 const deleteItem = (docId, fileLocation) => {
@@ -84,17 +86,21 @@ const MusicFileList = (props) => {
 
   return (
     <div className="container">
+               
       {listHeader()}
       {musicFiles.map(file => (
         <div className="row h-100 justify-content-center align-items-center" key={file.id} >
           <div className="col-sm-3">Filename: <a href={file.filePath}>{file.filename}</a></div>
+          <div className="col-sm-1"><Classify /></div>
           <div className="col-sm-3"><FontAwesomeIcon icon={faMusic} />&nbsp;{file.note}</div>
-          <div className="col-sm-5">
+          <div className="col-sm-4">
             <audio controls>
               <source src={file.filePath} type="audio/wav" />
             </audio>&nbsp; &nbsp;
             <FontAwesomeIcon className="fa-3x align" color="red" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id, file.fileLocation)} />
+ 
           </div>
+
         </div>
       ))}
     </div>

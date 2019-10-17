@@ -1,0 +1,14 @@
+.flaticon-sax:before {
+	content: "\e001";
+	font-size: 100px;
+}
+.flaticon-guitar:before {
+	content: "\e002";
+}
+.flaticon-trumpet:before {
+	content: "\e003";
+}
+.flaticon-flute:before {
+	content: "\e004";
+}
+
