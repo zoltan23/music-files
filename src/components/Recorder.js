@@ -3,6 +3,9 @@ import './Recorder.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import "./Callout.css"
+import RecordRTC, { invokeSaveAsDialog } from "recordrtc"
+import { storage, db } from "../services/firebase"
+import { v4 } from 'uuid';
 
 class Recorder extends Component {
     constructor(props) {
@@ -11,7 +14,6 @@ class Recorder extends Component {
             note: "G",
             pitch: "",
             audioSrc: "",
-            audioStream: null,
             micInput: '',
             showDetector: true,
             //Timer
@@ -23,7 +25,7 @@ class Recorder extends Component {
             timer: {},
             time: 0,
             timerStarted: false,
-            showThirtySecondCountDown : false
+            showThirtySecondCountDown: false
         }
         this.createVisualization = this.createVisualization.bind(this)
         this.componentDidMount = this.componentDidMount.bind(this)
@@ -34,6 +36,11 @@ class Recorder extends Component {
         this.countDownTimer = this.countDownTimer.bind(this)
         this.stopTimer = this.stopTimer.bind(this)
         this.clickStop = this.clickStop.bind(this)
+        this.recordAudio = this.recordAudio.bind(this)
+        this.uploadRecordAudio = this.uploadRecordAudio.bind(this)
+        this.getAudioStream = this.getAudioStream.bind(this)
+
+        console.log('this.props.uid', props.uid)
 
     }
 
@@ -42,8 +49,7 @@ class Recorder extends Component {
         this.getAudioStream()
             .then(audio => {
                 console.log('track mounted :', audio.getTracks()[0].label)
-                this.setState({ audioStream: audio, micLabel: audio.getTracks()[0].label })
-
+                this.setState({ micLabel: audio.getTracks()[0].label })
                 this.createVisualization()
             })
             // Todo: add error
@@ -69,21 +75,22 @@ class Recorder extends Component {
     // }
 
     closeAudioStream() {
-        if (this.state.audioStream) {
-            this.state.audioStream.getTracks().forEach(track => { console.log('track', track); track.stop() });
+        if (this.audio) {
+            this.audio.getTracks().forEach(track => { console.log('track', track); track.stop() });
         }
-        this.setState({ audio: null });
     }
 
     async getAudioStream() {
         console.log('getAudioStream()')
-        let audio
-        if (!this.state.audioStream) {
-            audio = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-        } else {
-            audio = this.state.audioStream
+        if (!this.audio) {
+            this.audio = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+
+            this.recorder = new RecordRTC(this.audio, {
+                type: 'audio',
+                mimeType: 'audio/wav'
+            });
         }
-        return audio
+        return this.audio
     }
 
     async createVisualization() {
@@ -257,23 +264,23 @@ class Recorder extends Component {
         e.preventDefault()
         console.log('Record Pressed')
         let _this = this
-        _this.setState({ showDetector: true, toggleRecord: true, showUpload : false, showThirtySecondCountDown : false })
+        _this.setState({ showDetector: true, toggleRecord: true, showUpload: false, showThirtySecondCountDown: false })
 
         console.log('starting counter')
         this.setState({ showDetector: false })
         await this.countDownTimer(5) // Wait 5 seconds
         console.log('done with 5 second counter')
-        this.setState({ showThirtySecondCountDown : true, showDetector : true })
+        this.setState({ showThirtySecondCountDown: true, showDetector: true })
+        this.recordAudio()
         await this.countDownTimer(5) // Wait 5 seconds
+        this.stopRecordAudio()
         console.log('done with 30 second counter')
-        this.setState({ showDetector: true, toggleRecord: false, showUpload : true, showThirtySecondCountDown : false })
-        
-
+        this.setState({ showDetector: true, toggleRecord: false, showUpload: true, showThirtySecondCountDown: false })
     }
 
     async stopTimer() {
         return new Promise((resolve, reject) => {
-            this.setState({ showDetector: true, timerStarted: false, toggleRecord: false, showThirtySecondCountDown : false}, () => {
+            this.setState({ showDetector: true, timerStarted: false, toggleRecord: false, showThirtySecondCountDown: false }, () => {
                 clearInterval(this.timer)
                 console.log('stop timer done')
                 resolve()
@@ -281,8 +288,43 @@ class Recorder extends Component {
         })
     }
 
+    async recordAudio() {
+        this.recorder.startRecording();
+    }
+
+    async stopRecordAudio() {
+        let _this = this
+        return new Promise((resolve, reject) => {
+            _this.recorder.stopRecording(function () {
+                // let blob = _this.recorder.getBlob();
+                // invokeSaveAsDialog(blob);
+                resolve()
+            });
+        })
+    }
+
+    async uploadRecordAudio(e) {
+        e.preventDefault()
+        console.log('save record Audio')
+        var storageRef = storage.ref();
+        var fileName = `recorded-${v4()}.wav`
+        var userId = this.props.uid
+        var storagePath = `music_files/${userId}/${fileName}`
+        console.log('storagePath', storagePath)
+        var ref = storageRef.child(storagePath);
+        let snapshot = await ref.put(this.recorder.getBlob());
+        console.log('Uploaded a blob or file!');
+        console.log(snapshot)
+        await db.collection("music").doc(userId).collection('musicId').doc().set({
+            //db.collection(userId).doc().set({
+            filePath: storagePath,
+            filename: fileName,
+            note: 'G'
+        })
+    }
+
     clickStop(e) {
-        this.setState({showUpload : false})
+        this.setState({ showUpload: false })
         e.preventDefault()
         this.stopTimer()
     }
@@ -357,9 +399,7 @@ class Recorder extends Component {
                     </div>
 
                     <div class="row d-flex justify-content-center">
-
-                        <div >
-
+                        <div>
                             <div class="card-body">
                                 <div class="card-title">Notes</div>
                                 <div class="card-text">
@@ -370,7 +410,7 @@ class Recorder extends Component {
                                     </canvas>
                                 </div>
                                 <div class="card-body">
-                                    <span className={ this.state.showThirtySecondCountDown ? "" : "hidden" }>Play a long tone for {this.state.time}</span>
+                                    <span className={this.state.showThirtySecondCountDown ? "" : "hidden"}>Play a long tone for {this.state.time}</span>
                                     <div className={this.state.showDetector ? "" : "hidden"}>
                                         <div ref="detector" id="detector" class="vague">
                                             <div id="pitch">{this.state.pitch} Hz</div>
@@ -394,7 +434,7 @@ class Recorder extends Component {
                         <a onClick={e => this.clickStop(e)} href="#" class={this.state.toggleRecord ? 'btn btn-danger btn-block' : 'hidden'}><FontAwesomeIcon icon={faCircle} />&nbsp;Stop</a>
                     </div>
                     <div class="col-6">
-                        <a href="#" class={this.state.showUpload ? 'btn btn-success btn-block' : 'hidden'} ><FontAwesomeIcon icon={faCloudUploadAlt} />&nbsp;Upload </a>
+                        <a onClick={e => this.uploadRecordAudio(e)} href="#" class={this.state.showUpload ? 'btn btn-success btn-block' : 'hidden'} ><FontAwesomeIcon icon={faCloudUploadAlt} />&nbsp;Upload </a>
                     </div>
                 </div>
 
