@@ -12,7 +12,7 @@ import { auth } from './services/firebase'
 import ResetPassword from './components/ResetPassword';
 import "./App.css"
 
-function App(props) {
+function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState("")
@@ -24,8 +24,9 @@ function App(props) {
     if (firebaseUser) {
       setIsLoggedIn(true)
       setUser(firebaseUser.email)
+      console.log("firebaseUserID:", firebaseUser.uid);
       setUid(firebaseUser.uid)
-      console.log("firebaseUser:", firebaseUser);
+      // console.log("firebaseUser:", firebaseUser);
     } else {
       setUser("")
       setIsLoggedIn(false)
@@ -51,7 +52,7 @@ function App(props) {
           <Route path='/signin' component={SignIn} />
           <Route path='/signup' component={SignUp} />
           <Route path='/signout' component={SignOut} />
-          <Route path='/recorder' component={Recorder} />
+          <Route path='/recorder' component={props => <Recorder {...props} isLoggedIn="true" uid={uid} />} />
           <Route path='/reset' component={ResetPassword} />
           <Route path="*" component={Landing} />
           {/* <Route
