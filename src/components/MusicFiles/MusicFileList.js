@@ -8,24 +8,27 @@ import '../../../src/icons/my-icons-collection/font/flaticon.css'
 
 let musicRef
 const deleteItem = (docId, fileLocation) => {
-  console.log("fileLocation", fileLocation)
-  const user = auth.currentUser
-  db.collection('music').doc(user.uid).collection('musicId').doc(docId).delete().then(function () {
-    console.log("Doc successfully deleted");
-  }).catch(function (error) {
-    console.log("Error removing document", error);
-  })
+  let confirmDelete = window.confirm("Are you sure you want to delete me?")
+  if (confirmDelete === true) {
+    const user = auth.currentUser
+    db.collection('music').doc(user.uid).collection('musicId').doc(docId).delete().then(function () {
+      console.log("Doc successfully deleted");
+    }).catch(function (error) {
+      console.log("Error removing document", error);
+    })
 
-  //Delete from Storage
-  let storageRef = storage.ref()
-  console.log("storageRef", storageRef)
-  let s = storageRef.child(fileLocation)
-  s.delete().then(function () {
-    // File deleted successfully
-  }).catch(function (error) {
-    // Uh-oh, an error occurred!
-  });
+    //Delete from Storage
+    let storageRef = storage.ref()
+    console.log("storageRef", storageRef)
+    let s = storageRef.child(fileLocation)
+    s.delete().then(function () {
+      // File deleted successfully
+    }).catch(function (error) {
+      // Uh-oh, an error occurred!
+    });
+  }
 }
+
 const MusicFileList = (props) => {
   console.log("props in list", props)
   const [musicFiles, setMusicFiles] = useState([])
@@ -86,7 +89,7 @@ const MusicFileList = (props) => {
 
   return (
     <div className="container">
-               
+
       {listHeader()}
       {musicFiles.map(file => (
         <div className="row h-100 justify-content-center align-items-center" key={file.id} >
@@ -97,8 +100,7 @@ const MusicFileList = (props) => {
             <audio controls>
               <source src={file.filePath} type="audio/wav" />
             </audio>&nbsp; &nbsp;
-            <FontAwesomeIcon className="fa-3x align" color="red" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id, file.fileLocation)} />
- 
+            <FontAwesomeIcon className="fa-3x align" id="buttonAlert" color="red" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id, file.fileLocation)} />
           </div>
 
         </div>
