@@ -1,8 +1,5 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGuitar, faTrumpet } from '@fortawesome/free-solid-svg-icons'
-import '../../../src/icons/my-icons-collection/font/flaticon.css'
-import { ReactComponent as Trumpet } from '../../../src/icons/my-icons-collection/svg/trumpet.svg'
+import { ReactComponent as Trumpet }  from '../../../src/icons/my-icons-collection/svg/trumpet.svg'
 import { ReactComponent as Flute } from '../../../src/icons/my-icons-collection/svg/flute.svg'
 import { ReactComponent as Cello } from '../../../src/icons/my-icons-collection/svg/cello.svg'
 import { ReactComponent as Clarinet } from '../../../src/icons/my-icons-collection/svg/clarinet.svg'
@@ -14,16 +11,16 @@ import { ReactComponent as SnareDrum } from '../../../src/icons/my-icons-collect
 import { ReactComponent as Violin } from '../../../src/icons/my-icons-collection/svg/violin.svg'
 import { ReactComponent as BassDrum } from '../../../src/icons/my-icons-collection/svg/bassdrum.svg'
 import { ReactComponent as Warning } from '../../../src/icons/my-icons-collection/svg/warning.svg'
-//import './MusicFileList.css'
+import './Classify.css'
 
 function Classify() {
-
+    console.log("Trumpet:  ", Trumpet)
     //After you get the value from the ML program, display the instrument
-    let instrument = 'Bass_drum'
+    let instrument = 'Trumpet'
     let icon;
     switch (instrument) {
         case 'Trumpet':
-            icon = <Trumpet />
+            icon = <Trumpet/>
             break
         case 'Saxophone':
             icon = <Saxophone />
@@ -58,12 +55,13 @@ function Classify() {
         default:
             icon = <Warning />   
     }
-
+    
     return (
-        <div>
-            {icon}
-            {/* <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
-        </div>
+    //         <div style={{height:'20%',
+    //   width: '20%'}} className="size color">
+    <div className="icon-size">
+      {icon}
+      </div>
     )
 }
 

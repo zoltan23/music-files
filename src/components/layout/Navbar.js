@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import SignedInLinks from './SignedInLinks'
 import SignedOutLinks from './SignedOutLinks'
 
-
 const Navbar = (props) => {
     console.log("islogged in", props.isLoggedIn)
     const links = props.isLoggedIn ? <SignedInLinks /> : <SignedOutLinks />

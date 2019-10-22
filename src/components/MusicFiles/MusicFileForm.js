@@ -7,10 +7,10 @@ import firebase from '../../services/firebase'
 import { v4 } from 'uuid';
 
 function MusicFileForm() {
-  var storageRef, file, rnd, fileref, storagePath
+  var storageRef, file, rnd, storagePath
   const fileInput = useRef();
   //State varialbles
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  //const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userId, setUserId] = useState('')
   const [filePath, setFilePath] = useState('')
   const [filename, setFileName] = useState('')
@@ -25,7 +25,7 @@ function MusicFileForm() {
     if (firebaseUser) {
       console.log('id', firebaseUser.uid)
       uid = firebase.auth.currentUser.uid
-      setIsLoggedIn(true)
+      //setIsLoggedIn(true)
       setUserId(firebaseUser.uid)
       console.log("firebaseUSer", firebaseUser);
     } else {
@@ -60,12 +60,10 @@ function MusicFileForm() {
         function complete(c) {
           console.log("upload complete");
           setProgress(0)
-          console.log("fileInput:", fileInput)
+          
           // callbackSetFileName(storagePath)
        
-          setFileName(file.name)
-          console.log("fileInput.current.value", fileInput.current.value)
-          
+          //setFileName(file.name)
           const fileNameTemp = file.name
           console.log("storage PATH", storageRef.location.path)       
           // setFilePath(storageRef.location.path)
@@ -126,4 +124,5 @@ function MusicFileForm() {
     </div>
   )
 }
+
 export default MusicFileForm

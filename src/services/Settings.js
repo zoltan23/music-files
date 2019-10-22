@@ -13,6 +13,7 @@ const Settings = (props) => {
     const [instrument, setInstrument] = useState('')
     const [experience, setExperience] = useState('')
     const [docId, setDocId] = useState('')
+    const [levelOfExperience, setLevelOfExperience] = useState('-- Please choose your level of experience. --')
 
     //Validation flag variables
     const [isFirstNameValid, setIsFirstNameValid] = useState(false)
@@ -29,7 +30,6 @@ const Settings = (props) => {
         console.log("email", email)
         getMusicCollection()
     }, [])
-
     
     const getMusicCollection = async () => {
         console.log("auth", auth.currentUser.uid)
@@ -91,7 +91,6 @@ const Settings = (props) => {
             console.log("password update error", error)
             setFirebaseError(error)
         });
-
     }
 
     const validateInstrument = (e) => {
@@ -133,6 +132,34 @@ const Settings = (props) => {
                 </div>
             )
         }
+    }
+
+    const setExperienceLevel = (num) => {
+        const experience = [
+            '-- Please choose your level of experience. --',
+            'Beginner',
+            'Junior High',
+            'High School',
+            'College',
+            'Post Collegiate/Community Band',
+            'Professional'
+        ]
+        setLevelOfExperience(experience[num])
+        setIsExperienceValid(num >= 1)
+    }
+    
+    const setInstrumentType = (num) => {
+        const instruments = [
+            '-- Please select your instrument. --',
+            'Trumpet',
+            'Clarinet',
+            'Saxophone',
+            'Trombone',
+            'Baritone',
+            'Tuba'
+        ]
+        setInstrument(instruments[num])
+        setIsInstrumentValid(num >= 1)
     }
 
     return (
@@ -190,31 +217,37 @@ const Settings = (props) => {
 
             <div className="form-row">
                 <div className="form-group col-md-6">
-                    <label>Please choose your instrument.</label>
-                    <select className={getValidString(isInstrumentValid)} onChange={validateInstrument} defaultValue={instrument}>
-                        <option defaultValue="0">{instrument}</option>x
-                        <option value="1">Trumpet</option>
-                        <option value="2">Clarinet</option>
-                        <option value="3">Saxophone</option>
-                        <option value="4">Trombone</option>
-                        <option value="5">Baritone</option>
-                        <option value="6">Tuba</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please choose your instrument.
-            </div>
+                <div className="dropdown" >
+                            <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isInstrumentValid)}`} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {instrument}
+                            </button>
+                            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(1)}>Trumpet</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(2)}>Clarinet</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(3)}>Saxophone</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(4)}>Trombone</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(5)}>Baritone</a>
+                                <a class="dropdown-item" href="#" onClick={e => setInstrumentType(6)}>Tuba</a>
+                            </div>
+                            <div class="invalid-feedback">
+                                Please select your instrument.
+                            </div>
+                        </div>
                 </div>
                 <div className="form-group col-md-6">
-                    <label>Please select your level of experience.</label>
-                    <select className={getValidString(isExperienceValid)} onChange={validateExperience} defaultValue={experience}>
-                        <option defaultValue="0">{experience}</option>
-                        <option value="1">Beginner</option>
-                        <option value="2">Junior High</option>
-                        <option value="3">High School</option>
-                        <option value="4">College</option>
-                        <option value="5">Post Collegiate/Community Band</option>
-                        <option value="6">Professional</option>
-                    </select>
+                <div className="dropdown">
+                            <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isExperienceValid)}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {levelOfExperience}
+                            </button>
+                            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(1)}>Beginner</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(2)}>Junior High</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(3)}>High School</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(4)}>College</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(5)}>Post Collegiate/Community Band</a>
+                                <a class="dropdown-item" href="#" onClick={e => setExperienceLevel(6)}>Professional</a>
+                            </div>
+                        </div>
                     <div class="invalid-feedback">
                         Please choose your level of experience.
             </div>
