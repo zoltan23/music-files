@@ -24,35 +24,38 @@ const SignUp = () => {
     const [isInstrumentValid, setIsInstrumentValid] = useState(false)
     const [isExperienceValid, setIsExperienceValid] = useState(false)
     const [firebaseError, setFirebaseError] = useState(false)
-
-
-
-
+    const [shouldValidate, setShouldValidate] = useState(false)
 
     const validateFirstName = (e) => {
+        setShouldValidate(true)
         setIsFirstNameValid(e.target.value.length > 0)
         setFirstName(e.target.value)
     }
 
     const validateLastName = (e) => {
+        setShouldValidate(true)
         setIsLastNameValid(e.target.value.length > 0)
         setLastName(e.target.value)
     }
 
     const validateEmail = (e) => {
+        setShouldValidate(true)
         setIsEmailValid(e.target.value.length > 0)
         setEmail(e.target.value)
     }
     const validateChoosePassword = (e) => {
+        setShouldValidate(true)
         setIsChoosePasswordValid(e.target.value.length >= 6)
         setChoosePassword(e.target.value)
     }
     const validateConfirmPassword = (e) => {
+        setShouldValidate(true)
         setIsConfirmPasswordValid((e.target.value.length >= 6) && (e.target.value === choosePassword))
         setConfirmPassword(e.target.value)
     }
 
     const validateInstrument = (e) => {
+        setShouldValidate(true)
         setIsInstrumentValid(e.target.value > 0)
         console.log("e value", e.target.options[e.target.selectedIndex].value)
         setInstrument(e.target.options[e.target.selectedIndex].text)
@@ -60,12 +63,14 @@ const SignUp = () => {
     }
 
     const validateExperience = (e) => {
+        setShouldValidate(true)
         setIsExperienceValid(e.target.value > 0)
         setExperience(e.target.value)
     }
 
     //Test that password and confirm password fields match
     const checkPassword = (e) => {
+        setShouldValidate(true)
         setConfirmPassword(e.target.value)
         if (choosePassword != confirmPassword) {
             console.log("not a match")
@@ -96,7 +101,13 @@ const SignUp = () => {
     }
 
     const getValidString = (stateBool) => {
-        return stateBool ? "form-control is-valid" : "form-control is-invalid"
+        if (shouldValidate) {
+            return stateBool ? "form-control is-valid" : "form-control is-invalid"
+        } else {
+            // Display an unvalidated page.  Looks neater.  When the user starts typing something, then validate 
+            return "form-control is-valid"
+        }
+        
     }
 
     const viewFirebaseError = () => {
