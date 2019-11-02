@@ -307,7 +307,7 @@ class Recorder extends Component {
         e.preventDefault()
         console.log('save record Audio')
         var storageRef = storage.ref();
-        var fileName = `recorded-${v4()}.wav`
+        var fileName = `recorded-${v4()}.mp3`
         var userId = this.props.uid
         var storagePath = `music_files/${userId}/${fileName}`
         console.log('storagePath', storagePath)
