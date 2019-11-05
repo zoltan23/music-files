@@ -54,50 +54,27 @@ const SignUp = () => {
         setConfirmPassword(e.target.value)
     }
 
-    const validateInstrument = (e) => {
-        setShouldValidate(true)
-        setIsInstrumentValid(e.target.value > 0)
-        console.log("e value", e.target.options[e.target.selectedIndex].value)
-        setInstrument(e.target.options[e.target.selectedIndex].text)
-        console.log("instrument e", instrument)
-    }
-
-    const validateExperience = (e) => {
-        setShouldValidate(true)
-        setIsExperienceValid(e.target.value > 0)
-        setExperience(e.target.value)
-    }
-
-    //Test that password and confirm password fields match
-    const checkPassword = (e) => {
-        setShouldValidate(true)
-        setConfirmPassword(e.target.value)
-        if (choosePassword != confirmPassword) {
-            console.log("not a match")
-        }
-    }
-
     const isDisabled = () => {
-        return (firstName && lastName && email && choosePassword && instrument && experience && (choosePassword === confirmPassword)) ? false : true
+
+
+        return (firstName && lastName && email && choosePassword && (choosePassword === confirmPassword) && isInstrumentValid && isExperienceValid) ? false : true
     }
 
-    const handleSignUp = (e) => {
-        console.log("disabled", isDisabled)
-
-        firebase.auth.createUserWithEmailAndPassword(email, choosePassword)
-            .then(function (user) {
-                console.log("user", user)
-                db.collection("music").doc(user.user.uid).collection('userInfo').doc().set({
-                    firstName: firstName,
-                    lastName: lastName,
-                    instrument: instrument,
-                    experience: experience
-                })
-                //Here if you want you can sign in the user
-            }).catch(function (error) {
-                console.log("error", error)
-                setFirebaseError(error)
+    const handleSignUp = async (e) => {
+        e.preventDefault()
+        try {
+            const user = await firebase.auth.createUserWithEmailAndPassword(email, choosePassword)
+            await db.collection("music").doc(user.user.uid).collection('userInfo').doc().set({
+                firstName: firstName,
+                lastName: lastName,
+                instrument: instrument,
+                experience: experience
             })
+        } catch (e) {
+            console.log(e)
+            setFirebaseError(e.message)
+        }
+        
     }
 
     const getValidString = (stateBool) => {
@@ -131,7 +108,9 @@ const SignUp = () => {
             'Post Collegiate/Community Band',
             'Professional'
         ]
+        setShouldValidate(true)
         setLevelOfExperience(experience[num])
+        console.log('Level of Experience num >= 1', num >= 1)
         setIsExperienceValid(num >= 1)
     }
     const setInstrumentType = (num) => {
@@ -144,7 +123,9 @@ const SignUp = () => {
             'Baritone',
             'Tuba'
         ]
+        setShouldValidate(true)
         setInstrument(instruments[num])
+        console.log('Instrument num >= 1', num >= 1)
         setIsInstrumentValid(num >= 1)
     }
 
@@ -165,7 +146,7 @@ const SignUp = () => {
                         <input className={getValidString(isLasttNameValid)} type="text" id="lastName" placeholder="Last Name" onChange={validateLastName} />
                         <div className="valid-feedback">
                             Looks good.
-            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="form-row">
@@ -174,7 +155,7 @@ const SignUp = () => {
                         <input className={getValidString(isEmailValid)} type="email" id="email" placeholder="Email" onChange={validateEmail} required />
                         <div class="invalid-feedback">
                             Please provide a valid email.
-            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="form-row">
@@ -183,7 +164,7 @@ const SignUp = () => {
                         <input className={getValidString(isChoosePasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateChoosePassword} />
                         <div class={"invalid-feedback"}>
                             Please provide a valid password.
-            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="form-row">
@@ -192,7 +173,7 @@ const SignUp = () => {
                         <input className={getValidString(isConfirmPasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateConfirmPassword} />
                         <div class="invalid-feedback">
                             Password does not match.
-            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="form-row">
@@ -211,7 +192,7 @@ const SignUp = () => {
                             </div>
                             <div class="invalid-feedback">
                             Please select your instrument.
-            </div>
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-6 mb-3">
@@ -230,7 +211,7 @@ const SignUp = () => {
                         </div>
                     </div>
                 </div>
-                <button className="btn btn-primary w-100" disabled={isDisabled()} onClick={handleSignUp}>Sign Up</button>
+                <button className="btn btn-primary w-100" disabled={isDisabled()} onClick={e => handleSignUp(e)}>Sign Up</button>
             </div>
             <div class="bottom-padding"/>
             

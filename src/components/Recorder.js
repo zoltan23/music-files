@@ -3,7 +3,7 @@ import './Recorder.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import "./Callout.css"
-import RecordRTC, { invokeSaveAsDialog } from "recordrtc"
+import RecordRTC, { invokeSaveAsDialog, StereoAudioRecorder } from "recordrtc"
 import { storage, db } from "../services/firebase"
 import { v4 } from 'uuid';
 
@@ -40,12 +40,9 @@ class Recorder extends Component {
         this.uploadRecordAudio = this.uploadRecordAudio.bind(this)
         this.getAudioStream = this.getAudioStream.bind(this)
 
-        console.log('this.props.uid', props.uid)
-
     }
 
     componentDidMount() {
-        console.log('componentDidMount()')
         this.getAudioStream()
             .then(audio => {
                 console.log('track mounted :', audio.getTracks()[0].label)
@@ -58,7 +55,6 @@ class Recorder extends Component {
 
 
     componentWillUnmount() {
-        console.log('componentWillUnmount()')
         this.closeAudioStream()
     }
 
@@ -86,8 +82,11 @@ class Recorder extends Component {
             this.audio = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
 
             this.recorder = new RecordRTC(this.audio, {
-                type: 'audio',
-                mimeType: 'audio/wav'
+                type: 'audio',                
+                mimeType: 'audio/wav',
+                recorderType: StereoAudioRecorder
+                //sampleRate: 96000,
+                //numberOfAudioChannels: 2,
             });
         }
         return this.audio
@@ -307,7 +306,7 @@ class Recorder extends Component {
         e.preventDefault()
         console.log('save record Audio')
         var storageRef = storage.ref();
-        var fileName = `recorded-${v4()}.mp3`
+        var fileName = `recorded-${v4()}.wav`
         var userId = this.props.uid
         var storagePath = `music_files/${userId}/${fileName}`
         console.log('storagePath', storagePath)
