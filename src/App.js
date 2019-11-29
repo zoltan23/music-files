@@ -11,6 +11,7 @@ import Settings from './services/Settings'
 import { auth } from './services/firebase'
 import ResetPassword from './components/ResetPassword';
 import "./App.css"
+import Header from './components/Header';
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
 
   return (
     <div class="container">
-      
+      <Header />
       <BrowserRouter>
         { !user ? <Redirect to="/signin" /> : <Redirect to="/landing" />}
         <Navbar isLoggedIn={isLoggedIn} user={user} />

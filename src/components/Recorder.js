@@ -53,7 +53,6 @@ class Recorder extends Component {
             .catch(e => console.log('error getting media', e))
     }
 
-
     componentWillUnmount() {
         this.closeAudioStream()
     }
