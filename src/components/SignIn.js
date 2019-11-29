@@ -1,19 +1,36 @@
 import React, { useState } from 'react'
 import { auth } from '../services/firebase'
 import './SignIn.css'
+import { useDispatch } from 'react-redux'
+//import { auth } from '../../src/services/firebase'
 
 const SignIn = (props) => {
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [renderFlag, setRenderFlag] = useState(true)
     const [firebaseError, setFirebaseError] = useState(false)
+    const dispatch = useDispatch()
 
     const handleSignIn = (e) => {
         e.preventDefault()
-        auth.signInWithEmailAndPassword(email, password)
-            .then(console.log("user signed in!!!", auth.currentUser))
+        const user = auth.signInWithEmailAndPassword(email, password)
+            .then(dispatch({
+                type: "ISLOGGEDIN_TRUE"
+              }))
             .catch(error =>  setFirebaseError(error))
+        console.log('user.i', user.i)
+
+        auth.onAuthStateChanged(function(user) {
+            if (user) {
+                dispatch({
+                    type: "SET_UID",
+                    payload: user.uid
+                })
+              console.log('[Signin] user', user.uid)
+            } else {
+              // No user is signed in.
+            }
+          });
     }
 
     const handlePasswordReset = (e) => {

@@ -47,8 +47,8 @@ const Settings = (props) => {
 
             setIsFirstNameValid(doc.data().firstName ? true : false)
             setIsLastNameValid(doc.data().lastName ? true : false)
-            setIsInstrumentValid(doc.data().instrument != 0 ? true : false)
-            setIsExperienceValid(doc.data().experience != 0 ? true : false)
+            setIsInstrumentValid(doc.data().instrument !== 0 ? true : false)
+            setIsExperienceValid(doc.data().experience !== 0 ? true : false)
         })
     }
 
@@ -91,16 +91,6 @@ const Settings = (props) => {
             console.log("password update error", error)
             setFirebaseError(error)
         });
-    }
-
-    const validateInstrument = (e) => {
-        setIsInstrumentValid(e.target.value > 0)
-        setInstrument(e.target.options[e.target.selectedIndex].text)
-    }
-
-    const validateExperience = (e) => {
-        setIsExperienceValid(e.target.value > 0)
-        setExperience(e.target.value)
     }
 
     const isDisabled = () => {

@@ -5,33 +5,24 @@ import './MusicFileForm.css'
 import MusicFileList from './MusicFileList'
 import firebase from '../../services/firebase'
 import { v4 } from 'uuid';
+import { useSelector } from 'react-redux'
+import { statement } from '@babel/template';
 
 function MusicFileForm() {
   var storageRef, file, rnd, storagePath
   const fileInput = useRef();
   //State varialbles
-  //const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [userId, setUserId] = useState('')
+  const { uid } = useSelector(state => ({
+    ...state.authReducer
+  }))
   const [filePath, setFilePath] = useState('')
-  const [filename, setFileName] = useState('')
   const [note, setNote] = useState('')
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState({})
   const [isUploaded, setIsUploaded] = useState(false)
   
-  let uid
-  console.log("firebase auth id: ", uid)
-  firebase.auth.onAuthStateChanged(firebaseUser => {
-    if (firebaseUser) {
-      console.log('id', firebaseUser.uid)
-      uid = firebase.auth.currentUser.uid
-      //setIsLoggedIn(true)
-      setUserId(firebaseUser.uid)
-      console.log("firebaseUSer", firebaseUser);
-    } else {
-      setUserId('')
-    }
-  });
+  console.log("[Form] uid: ", uid)
+
   const submitHandler = event => {
     event.preventDefault()
     console.log("submit handler fired")
@@ -60,17 +51,9 @@ function MusicFileForm() {
         function complete(c) {
           console.log("upload complete");
           setProgress(0)
-          
-          // callbackSetFileName(storagePath)
-       
-          //setFileName(file.name)
           const fileNameTemp = file.name
-          console.log("storage PATH", storageRef.location.path)       
-          // setFilePath(storageRef.location.path)
           const filePathTemp = storageRef.location.path
-          console.log("filepath", filePathTemp)
-          db.collection("music").doc(userId).collection('musicId').doc().set({
-            //db.collection(userId).doc().set({
+          db.collection("music").doc(uid).collection('musicId').doc().set({
             filePath: filePathTemp,
             filename: fileNameTemp,
             note: note
@@ -120,7 +103,7 @@ function MusicFileForm() {
           </form>
         </div>
       </div>
-      <div><MusicFileList userId={userId} /></div>
+      <div><MusicFileList userId={uid} /></div>
     </div>
   )
 }
