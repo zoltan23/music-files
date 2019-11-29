@@ -1,15 +1,16 @@
-export default function userInfo(state, action) {
+export default function userInfoReducer(state = {firstName: "", lastName: ""}, action) {
     switch(action.type) {
         case "SET_FIRSTNAME":
             return {
                 ...state,
-                firstName: "firstName"
+                firstName: action.payload
             }    
         case "SET_LASTNAME":
             return {
                 ...state,
-                lastName: "lastName"
+                lastName: action.payload
             }    
+          
         default:
             return state
     }

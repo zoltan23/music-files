@@ -3,18 +3,24 @@ import ReactDOM from 'react-dom';
 //import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-import  reducer  from './components/reducers/auth'
-import userinfo from './components/reducers/userinfo'
+import  authReducer  from './components/reducers/auth'
+import userInfoReducer from './components/reducers/userinfo'
 
 const INITIAL_STATE = {
     isLoggedIn: false,
+    email: '',
     firstName: '',
-    lastName: ''
+    lastName: ''   
 }
 
-const store = createStore(userinfo, INITIAL_STATE)
+const rootReducer = combineReducers({
+    authReducer,
+    userInfoReducer
+})
+
+const store = createStore(rootReducer, INITIAL_STATE)
 
 window.store = store;
 //window.addArticle = addArticle;

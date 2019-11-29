@@ -6,12 +6,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { CodeGenerator } from '@babel/generator'
 
 const SignUp = () => {
-    
+
     const dispatch = useDispatch()
     //State variables
-    //const firstName = useSelector(state => state.firstName)
-    const [firstName, setFirstName] = useState('')
-   const [lastName, setLastName] = useState('')
+    const {firstName} = useSelector(state => ({...state.userInfoReducer}))
+    const {lastName} = useSelector(state => ({...state.userInfoReducer}))
+    //const lastName = useSelector(state => state.lastName)
+    //const [firstName, setFirstName] = useState('')
+    //const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [choosePassword, setChoosePassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -33,21 +35,19 @@ const SignUp = () => {
     const validateFirstName = (e) => {
         setShouldValidate(true)
         setIsFirstNameValid(e.target.value.length > 0)
-        setFirstName(e.target.value)
-        
+
         dispatch({
-            type: "SET_FIRSTNAME"
+            type: "SET_FIRSTNAME",
+            payload: e.target.value
         })
-        console.log('firstName', firstName)
-        
     }
 
     const validateLastName = (e) => {
         setShouldValidate(true)
         setIsLastNameValid(e.target.value.length > 0)
-        setLastName(e.target.value)
         dispatch({
-            type: "SET_LASTNAME"
+            type: "SET_LASTNAME",
+            payload: e.target.value
         })
     }
 
@@ -77,6 +77,7 @@ const SignUp = () => {
         e.preventDefault()
         try {
             const user = await firebase.auth.createUserWithEmailAndPassword(email, choosePassword)
+            console.log('[Signup] user', user)
             await db.collection("music").doc(user.user.uid).collection('userInfo').doc().set({
                 firstName: firstName,
                 lastName: lastName,
@@ -87,7 +88,7 @@ const SignUp = () => {
             console.log(e)
             setFirebaseError(e.message)
         }
-        
+
     }
 
     const getValidString = (stateBool) => {
@@ -97,7 +98,6 @@ const SignUp = () => {
             // Display an unvalidated page.  Looks neater.  When the user starts typing something, then validate 
             return "form-control is-valid"
         }
-        
     }
 
     const viewFirebaseError = () => {
@@ -192,7 +192,7 @@ const SignUp = () => {
                 <div className="form-row">
                     <div className="col-md-6 mb-3">
                         <div className="dropdown" >
-                            <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isInstrumentValid)}`}  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isInstrumentValid)}`} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {instrument}
                             </button>
                             <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
@@ -204,7 +204,7 @@ const SignUp = () => {
                                 <a class="dropdown-item" href="#" onClick={e => setInstrumentType(6)}>Tuba</a>
                             </div>
                             <div class="invalid-feedback">
-                            Please select your instrument.
+                                Please select your instrument.
                             </div>
                         </div>
                     </div>
@@ -226,10 +226,10 @@ const SignUp = () => {
                 </div>
                 <button className="btn btn-primary w-100" disabled={isDisabled()} onClick={e => handleSignUp(e)}>Sign Up</button>
             </div>
-            <div class="bottom-padding"/>
-            
+            <div class="bottom-padding" />
+
         </form>
-        
+
     )
 }
 
