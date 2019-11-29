@@ -1,10 +1,8 @@
 import React from 'react'
 import './Landing.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMusic, faTrashAlt, faHands } from '@fortawesome/free-solid-svg-icons'
 import Title from "../title2.png";
-const Landing = () => {
 
+const Landing = () => {
     return (
             <div class="card mb-3">
                 <img src={Title} class="img-height img-center"/>

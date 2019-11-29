@@ -1,4 +1,4 @@
-export default function reducer(state, action) {
+export default function authReducer(state = {isLoggedIn: false, email: "", uid: ""}, action) {
     switch(action.type) {
         case "ISLOGGEDIN_TRUE":
             return {
@@ -9,8 +9,18 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 isLoggedIn: false
-            }    
-        default:
+            }   
+        case "SET_EMAIL":
+            return {
+                ...state,
+                email: action.payload
+            } 
+        case "SET_UID":
+            return {
+                ...state,
+                uid: action.payload
+            } 
+         default:
             return state
     }
 }
