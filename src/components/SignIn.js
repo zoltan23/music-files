@@ -1,36 +1,20 @@
 import React, { useState } from 'react'
 import { auth } from '../services/firebase'
 import './SignIn.css'
-import { useDispatch } from 'react-redux'
-//import { auth } from '../../src/services/firebase'
 
 const SignIn = (props) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [renderFlag, setRenderFlag] = useState(true)
     const [firebaseError, setFirebaseError] = useState(false)
-    const dispatch = useDispatch()
 
     const handleSignIn = (e) => {
         e.preventDefault()
-        const user = auth.signInWithEmailAndPassword(email, password)
-            .then(dispatch({
-                type: "ISLOGGEDIN_TRUE"
-              }))
-            .catch(error =>  setFirebaseError(error))
-        console.log('user.i', user.i)
-
-        auth.onAuthStateChanged(function(user) {
-            if (user) {
-                dispatch({
-                    type: "SET_UID",
-                    payload: user.uid
-                })
-              console.log('[Signin] user', user.uid)
-            } else {
-              // No user is signed in.
-            }
-          });
+        auth.signInWithEmailAndPassword(email, password)
+            .then((user) => {
+                console.log('sign in with email and password')
+            })
+            .catch(error => setFirebaseError(error))
     }
 
     const handlePasswordReset = (e) => {
@@ -41,7 +25,7 @@ const SignIn = (props) => {
         });
         setRenderFlag(false)
 
-        setTimeout(() =>{
+        setTimeout(() => {
             props.history.push('/landing')
         }, 5000)
     }
@@ -54,11 +38,11 @@ const SignIn = (props) => {
                     {firebaseError.message}
                 </div>
             )
-        } 
+        }
     }
 
     const form = <form className="form-signin">
-        {viewFirebaseError()}
+        {() => viewFirebaseError() }
         <div className="text-center mb-4">
             <img className="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
             <h1 className="h3 mb-3 font-weight-normal">Jam with our Band</h1>
@@ -83,13 +67,13 @@ const SignIn = (props) => {
 
     const reset = <div>
         <p>An email has been sent to reset your password. You will be redirected to the hompage shortly.</p>
-    </div> 
+    </div>
 
     const html = renderFlag ? form : reset
     return (
         <div>
             {html}
-        </div>            
+        </div>
     )
 }
 

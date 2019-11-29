@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer, INITIAL_STATE)
 
-window.store = store;
+// window.store = store;
 //window.addArticle = addArticle;
 
 ReactDOM.render(

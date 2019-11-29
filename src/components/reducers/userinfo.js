@@ -1,17 +1,25 @@
-export default function userInfoReducer(state = {firstName: "", lastName: ""}, action) {
+const initialState = {
+    firstName: '', 
+    lastName: ''
+}
+
+const userInfoReducer = (state = initialState, action) => {
+    console.log('Action!', action)
     switch(action.type) {
-        case "SET_FIRSTNAME":
+        case 'SET_FIRSTNAME':
             return {
                 ...state,
-                firstName: action.payload
+                firstName: action.firstName
             }    
-        case "SET_LASTNAME":
+        case 'SET_LASTNAME':
             return {
                 ...state,
-                lastName: action.payload
+                lastName: action.lastName
             }    
           
         default:
             return state
     }
 }
+
+export default userInfoReducer
