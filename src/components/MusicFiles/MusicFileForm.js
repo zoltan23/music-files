@@ -3,40 +3,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../../services/firebase'
 import './MusicFileForm.css'
 import MusicFileList from './MusicFileList'
-import firebase from '../../services/firebase'
+import { storage } from '../../services/firebase'
 import { v4 } from 'uuid';
 import { useSelector } from 'react-redux'
-import { statement } from '@babel/template';
 
 function MusicFileForm() {
   var storageRef, file, rnd, storagePath
   const fileInput = useRef();
-  //State varialbles
-  const { uid } = useSelector(state => ({
-    ...state.authReducer
-  }))
   const [filePath, setFilePath] = useState('')
   const [note, setNote] = useState('')
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState({})
   const [isUploaded, setIsUploaded] = useState(false)
-  
-  console.log("[Form] uid: ", uid)
 
+  const uid = useSelector(state => state.authReducer.uid)
+  
   const submitHandler = event => {
     event.preventDefault()
-    console.log("submit handler fired")
   }
+
   const addFile = e => {
     e.preventDefault();
     console.log("addFile submited")
     Object.keys(files.files).forEach(k => {
       file = files.files[k]
       rnd = v4()
-      console.log("rnd", rnd)
-      console.log("file name########", file.name)
       storagePath = `music_files/${uid}/${rnd}.wav`
-      storageRef = firebase.storage.ref(storagePath);
+      storageRef = storage.ref(storagePath);
       var task = storageRef.put(file)
       task.then(s => console.log('sssssss', s))
       task.on('state_changed',
@@ -61,7 +54,6 @@ function MusicFileForm() {
             fileInput.current.value = null
             setIsUploaded(false)
           });           
-          console.log("addFile filename", filePath)
         }
       );
     })

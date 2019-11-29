@@ -5,8 +5,66 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMusic, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import Classify from './Classify.js'
 import '../../../src/icons/my-icons-collection/font/flaticon.css'
+import { useSelector } from 'react-redux'
 
-let musicRef
+const MusicFileList = (props) => {
+
+  const [musicFiles, setMusicFiles] = useState([])
+  const uid = useSelector(state => state.authReducer.uid)
+
+  const listHeader = () => {
+    if (musicFiles.length > 0) {
+      return (
+        <div>
+          <h2>Uploaded Files</h2>
+        </div>
+      )
+    }
+  }
+
+  // Prevent inifinte loop caused by rerender
+  useEffect(() => {
+    const musicRef = db.collection('music').doc(uid).collection('musicId');
+    musicRef.onSnapshot(snapshot => {
+      var p = []
+      snapshot.forEach(doc => {
+        p.push(new Promise((resolve, reject) => {
+          var docData = doc.data()
+          try {
+            var pathReference = storage.ref(docData.filePath);
+            pathReference.getDownloadURL().then(path => {
+              docData.filePath = path
+              docData.fileLocation = pathReference.location.path
+              resolve({ ...docData, id: doc.id })
+            })
+          } catch (e) {
+            resolve({ ...docData, id: doc.id })
+          }
+        }))
+      })
+      Promise.all(p).then(pp => {
+        setMusicFiles(pp)
+      })
+    })
+  }, [])
+
+  return (
+    <div className="container">
+      {listHeader()}
+      {musicFiles.map(file => (
+        <div className="row h-100 justify-content-center align-items-center" key={file.id} >
+          <div className="col-sm-3">Filename: <a href={file.filePath}>{file.filename}</a></div>
+          <div className="col-sm-1"><Classify /></div>
+          <div className="col-sm-3"><FontAwesomeIcon icon={faMusic} />&nbsp;{file.note}</div>
+          <div className="col-sm-4">
+            <AudioComponent file={file} />
+            <FontAwesomeIcon className="fa-3x align" id="buttonAlert" color="red" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id, file.fileLocation)} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 const deleteItem = (docId, fileLocation) => {
   let confirmDelete = window.confirm("Are you sure you want to delete me?")
@@ -37,80 +95,4 @@ const AudioComponent = (props) => {
   </audio>)
 }
 
-const MusicFileList = (props) => {
-  console.log("props in list", props)
-  const [musicFiles, setMusicFiles] = useState([])
-  console.log('Here are your music files', musicFiles)
-  const [authId, setAuthId] = useState('')
-
-  useEffect(() => {
-
-    auth.onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-        setAuthId(firebaseUser.uid)
-        // console.log("firebaseUSer", firebaseUser);
-        const user = auth.currentUser
-        musicRef = db.collection('music').doc(user.uid).collection('musicId');
-        musicRef.onSnapshot(snapshot => {
-          var p = []
-          let count = 0
-          snapshot.forEach(doc => {
-            p.push(new Promise((resolve, reject) => {
-              var docData = doc.data()
-              // console.log('docData', docData)
-              try {
-                var pathReference = storage.ref(docData.filePath);
-                pathReference.getDownloadURL().then(path => {
-                  docData.filePath = path
-                  // console.lxog("pathReference", path)
-                  docData.fileLocation = pathReference.location.path
-                  // console.log('count', ++count)
-                  resolve({ ...docData, id: doc.id })
-                })
-              } catch (e) {
-                // console.log('error processing url', e)
-                // console.log('count', ++count)
-                resolve({ ...docData, id: doc.id })
-              }
-            }))
-          })
-          Promise.all(p).then(pp => {
-            // console.log('setting music files', pp.length)
-            // console.log('pp', pp)
-            setMusicFiles(pp)
-          })
-        })
-      } else {
-        setAuthId('')
-      }
-    });
-  }, [])
-
-  const listHeader = () => {
-    if (musicFiles.length > 0) {
-      return (
-        <div>
-          <h2>Uploaded Files</h2>
-        </div>
-      )
-    }
-  }
-
-  return (
-    <div className="container">
-      {listHeader()}
-      {musicFiles.map(file => (
-        <div className="row h-100 justify-content-center align-items-center" key={file.id} >
-          <div className="col-sm-3">Filename: <a href={file.filePath}>{file.filename}</a></div>
-          <div className="col-sm-1"><Classify /></div>
-          <div className="col-sm-3"><FontAwesomeIcon icon={faMusic} />&nbsp;{file.note}</div>
-          <div className="col-sm-4">
-            <AudioComponent file={file} />
-            <FontAwesomeIcon className="fa-3x align" id="buttonAlert" color="red" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id, file.fileLocation)} />
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
 export default MusicFileList
