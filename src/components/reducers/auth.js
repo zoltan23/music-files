@@ -1,27 +1,33 @@
-export default function authReducer(state = {isLoggedIn: false, email: "", uid: ""}, action) {
-    switch(action.type) {
-        case "ISLOGGEDIN_TRUE":
+const initialState = { 
+    isLoggedIn: false, 
+    email: '', 
+    uid: '' 
+}
+
+const authReducer = (state = initialState, action) => {
+    
+    switch (action.type) {
+        case 'SET_ISLOGGEDIN':
+            console.log('IsLoggedIn!!!', action.isLoggedIn)
             return {
                 ...state,
-                isLoggedIn: true
-            }    
-        case "ISLOGGEDIN_FALSE":
+                isLoggedIn: action.isLoggedIn
+            }
+        case 'SET_EMAIL':
             return {
                 ...state,
-                isLoggedIn: false
-            }   
-        case "SET_EMAIL":
+                email: action.email
+            }
+        case 'SET_UID':
+            console.log('Yea uid!', action.uid)
             return {
                 ...state,
-                email: action.payload
-            } 
-        case "SET_UID":
-            return {
-                ...state,
-                uid: action.payload
-            } 
-         default:
+                uid: action.uid
+            }
+        default:
             return state
     }
 }
+
+export default authReducer
 

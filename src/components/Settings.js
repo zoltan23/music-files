@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import firebase from '../services/firebase'
 import { db, auth } from '../services/firebase'
+import { useSelector } from 'react-redux'
 
-const Settings = (props) => {
+const Settings = () => {
+
+    const uid = useSelector(state => state.authReducer.uid)
 
     //State variables
     const [firstName, setFirstName] = useState('')
@@ -32,8 +35,8 @@ const Settings = (props) => {
     }, [])
     
     const getMusicCollection = async () => {
-        console.log("auth", auth.currentUser.uid)
-        let snapshot = await db.collection('music').doc(auth.currentUser.uid).collection('userInfo')
+        console.log("auth", uid)
+        let snapshot = await db.collection('music').doc(uid).collection('userInfo')
             .get()
 
         snapshot.docs.forEach(doc => {
@@ -98,10 +101,8 @@ const Settings = (props) => {
     }
 
     const updateUserInfo = (e) => {
-        console.log("props update user: ", props.uid)
-        setDocId(db.collection("music").doc(props.uid).collection('userInfo').doc.id)
-        console.log("docID", docId)
-        db.collection("music").doc(props.uid).collection('userInfo').doc(docId).update({
+        setDocId(db.collection("music").doc(uid).collection('userInfo').doc.id)
+        db.collection("music").doc(uid).collection('userInfo').doc(docId).update({
             firstName: firstName,
             lastName: lastName,
             instrument: instrument,
@@ -115,7 +116,6 @@ const Settings = (props) => {
 
     const viewFirebaseError = () => {
         if (firebaseError) {
-            console.log("Firebase error", firebaseError)
             return (
                 <div class="alert alert-danger" role="alert">
                     {firebaseError.message}
