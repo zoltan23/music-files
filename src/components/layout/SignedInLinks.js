@@ -1,14 +1,20 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { auth } from '../../services/firebase'
+import { useDispatch } from 'react-redux'
+
+
+
+const SignedInLinks = () => {
+    const dispatch = useDispatch()
 
 const signOut = (e) => {
     e.preventDefault()
     auth.signOut()
             .then(() => console.log("Signed Out!!!"))
-}
+    
 
-const SignedInLinks = () => {
+}
     return(
         <div class="navbar-nav">
             <NavLink className="nav-item nav-link" to ='/settings'>Settings</NavLink>
