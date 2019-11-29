@@ -2,12 +2,16 @@ import React, { useState } from 'react'
 import firebase from '../services/firebase'
 import { db } from '../services/firebase'
 import "./SignUp.css"
+import { useSelector, useDispatch } from 'react-redux'
+import { CodeGenerator } from '@babel/generator'
 
 const SignUp = () => {
-
+    
+    const dispatch = useDispatch()
     //State variables
+    //const firstName = useSelector(state => state.firstName)
     const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
+   const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [choosePassword, setChoosePassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -30,12 +34,21 @@ const SignUp = () => {
         setShouldValidate(true)
         setIsFirstNameValid(e.target.value.length > 0)
         setFirstName(e.target.value)
+        
+        dispatch({
+            type: "SET_FIRSTNAME"
+        })
+        console.log('firstName', firstName)
+        
     }
 
     const validateLastName = (e) => {
         setShouldValidate(true)
         setIsLastNameValid(e.target.value.length > 0)
         setLastName(e.target.value)
+        dispatch({
+            type: "SET_LASTNAME"
+        })
     }
 
     const validateEmail = (e) => {

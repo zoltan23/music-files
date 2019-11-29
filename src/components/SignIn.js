@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { auth } from '../services/firebase'
 import './SignIn.css'
+import { useDispatch } from 'react-redux'
 
 const SignIn = (props) => {
 
@@ -8,12 +9,16 @@ const SignIn = (props) => {
     const [password, setPassword] = useState('')
     const [renderFlag, setRenderFlag] = useState(true)
     const [firebaseError, setFirebaseError] = useState(false)
+    const dispatch = useDispatch()
 
     const handleSignIn = (e) => {
         e.preventDefault()
         auth.signInWithEmailAndPassword(email, password)
-            .then(console.log("user signed in!!!", auth.currentUser))
+            .then(dispatch({
+                type: "ISLOGGEDIN_TRUE"
+              }))
             .catch(error =>  setFirebaseError(error))
+        
     }
 
     const handlePasswordReset = (e) => {
