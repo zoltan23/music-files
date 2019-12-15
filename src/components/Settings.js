@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 const Settings = () => {
 
     const uid = useSelector(state => state.authReducer.uid)
-
+    console.log('uid', uid)
     //State variables
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -32,6 +32,7 @@ const Settings = () => {
     useEffect(() => {
         console.log("email", email)
         getMusicCollection()
+    
     }, [])
     
     const getMusicCollection = async () => {
@@ -47,7 +48,7 @@ const Settings = () => {
             setInstrument(doc.data().instrument)
             setExperience(doc.data().experience)
             setDocId(doc.id)
-
+            console.log('[getMusicColl] doc.id', doc.id)
             setIsFirstNameValid(doc.data().firstName ? true : false)
             setIsLastNameValid(doc.data().lastName ? true : false)
             setIsInstrumentValid(doc.data().instrument !== 0 ? true : false)
@@ -100,8 +101,7 @@ const Settings = () => {
         return (firstName && lastName && email && instrument && experience) ? false : true
     }
 
-    const updateUserInfo = (e) => {
-        setDocId(db.collection("music").doc(uid).collection('userInfo').doc.id)
+    const updateUserInfo = () => {
         db.collection("music").doc(uid).collection('userInfo').doc(docId).update({
             firstName: firstName,
             lastName: lastName,
