@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import firebase from '../services/firebase'
-import { db, auth } from '../services/firebase'
+import { db } from '../services/firebase'
 import { useSelector } from 'react-redux'
 
 const Settings = () => {
@@ -108,6 +108,16 @@ const Settings = () => {
             instrument: instrument,
             experience: experience
         })
+    }
+
+    const deleteUser = () => {
+        var user = firebase.auth.currentUser;
+        user.delete().then(function() {
+            // User deleted.
+          }).catch(function(error) {
+            // An error happened.
+          });
+  
     }
 
     const getValidString = (stateBool) => {
@@ -243,7 +253,13 @@ const Settings = () => {
             </div>
                 </div>
             </div>
-            <button className="btn btn-dark" disabled={isDisabled()} onClick={updateUserInfo}>Update User Information</button>
+            <div className="form-row">
+                <div  className="form-group">
+
+            <button className="btn form-control" disabled={isDisabled()} onClick={updateUserInfo}>Update User Information</button>
+            <button className="btn form-control" disabled={false} onClick={deleteUser}>Delete Your Profile</button>
+                </div>
+            </div>
         </div>
     )
 }

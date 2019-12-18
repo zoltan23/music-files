@@ -49,12 +49,12 @@ const SignIn = (props) => {
             <p>Welcome to our interactive musician assistant</p>
         </div>
         <div className="form-label-group">
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus onChange={e => setEmail(e.target.value)} value={email} />
-            <label for="inputEmail">Email address</label>
+            <input type="email" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus onChange={e => setEmail(e.target.value)} value={email} />
+            <label htmlFor="inputEmail">Email address</label>
         </div>
         <div className="form-label-group">
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required onChange={e => setPassword(e.target.value)} value={password} />
-            <label for="inputPassword">Password</label>
+            <input type="password" id="inputPassword" className="form-control" placeholder="Password" required onChange={e => setPassword(e.target.value)} value={password} />
+            <label htmlFor="inputPassword">Password</label>
         </div>
         <div className="form-group">
             <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignIn}>Sign in</button>
@@ -62,7 +62,7 @@ const SignIn = (props) => {
         <div className="form-group">
             <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handlePasswordReset}>Password Reset</button>
         </div>
-        <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
+        <p className="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
     </form>
 
     const reset = <div>

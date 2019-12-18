@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import Navbar from './components/layout/Navbar'
 import Landing from './components/Landing'
@@ -17,10 +17,9 @@ function App() {
 
   const dispatch = useDispatch()
   const isLoggedIn = useSelector(state => state.authReducer.isLoggedIn)
-  const uid = useSelector(state => state.authReducer.uid)
 
   auth.onAuthStateChanged(firebaseUser => {
-    console.log('firebase user', firebaseUser.uid)
+    console.log('firebase user', firebaseUser)
     if (firebaseUser) {
       dispatch({type:'SET_EMAIL', email : firebaseUser.email})
       dispatch({type:'SET_FIRSTNAME', firstName : firebaseUser.email})
@@ -32,7 +31,7 @@ function App() {
   });
 
   return (
-    <div class="container">
+    <div className="container">
       <BrowserRouter>
         { !isLoggedIn ? <Redirect to="/signin" /> : <Redirect to="/landing" />}
         <Navbar />
@@ -48,7 +47,7 @@ function App() {
           <Route path="*" component={Landing} />
         </Switch>
       </BrowserRouter>
-    </div>
+   </div>
   );
 }
 

@@ -1,14 +1,15 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import './Landing.css'
 import Title from "../title2.png";
 
 const Landing = () => {
     return (
-        <div class="card mb-3">
-            <img src={Title} class="img-height img-center" />
-            <div class="card-body">
-                <h5 class="card-title">Welcome to Jam with Our Band</h5>
-                <p class="card-text">
+        <div className="card mb-3">
+            <img src={Title} className="img-height img-center" />
+            <div className="card-body">
+                <h5 className="card-title">Welcome to Jam with Our Band</h5>
+                <div className="card-text">
                     <p>
                         We are TeamNeo and we are participating in the <span><a href="https://www.utahgeekevents.com/competition/">Smart Cities and Connected Communities</a>
                         </span> data science competition.  In short,
@@ -23,8 +24,8 @@ const Landing = () => {
                         <dt>What are the recordings used for?</dt>
                         <dd>The recordings will be used to train a machine learning algorithm that will be able to determine how stable your long tones are. </dd>
                     </dl>
-                </p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+                <p className="card-text"><small className="text-muted">Last updated 3 mins ago</small></p>
             </div>
         </div>
 

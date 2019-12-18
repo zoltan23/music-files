@@ -73,8 +73,8 @@ function MusicFileForm() {
 
   return (
     <div>
-      <div class="card">
-        <div class="card-body">
+      <div className="card">
+        <div className="card-body">
           <form className="form-inline justify-content-center" onSubmit={submitHandler}>
             <div className="App">
               <progress value={progress} max="100" id="uploader">0%</progress>

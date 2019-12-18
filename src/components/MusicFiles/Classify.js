@@ -57,8 +57,6 @@ function Classify() {
     }
     
     return (
-    //         <div style={{height:'20%',
-    //   width: '20%'}} className="size color">
     <div className="icon-size">
       {icon}
       </div>

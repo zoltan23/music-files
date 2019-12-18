@@ -2,8 +2,8 @@ import React from 'react'
 import firebase from '../services/firebase'
 import { useDispatch } from 'react-redux'
 
-const SignOut = () => {   
-    //console.log("props.isloggedin", props.isLoggedIn)
+const SignOut = () => {
+
     const dispatch = useDispatch()
     const handleSignOut = (e) => {
         e.preventDefault()
@@ -11,10 +11,11 @@ const SignOut = () => {
         firebase.auth.signOut()
             .then(dispatch({
                 type: "TOGGLE_ISLOGGEDIN"
-              }))
-              .catch(console.log("$$$$singed out"))
+            }))
+            .catch(console.log("$$$$signed out"))
     }
-    return(
+    console.log("$$$$Signed out")
+    return (
         <div>
             <button className="btn btn-primary" onClick={handleSignOut}>Sign Me Out</button>
         </div>
