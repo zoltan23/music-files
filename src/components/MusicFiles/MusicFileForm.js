@@ -10,21 +10,19 @@ import { useSelector } from 'react-redux'
 function MusicFileForm() {
   var storageRef, file, rnd, storagePath
   const fileInput = useRef();
-  const [filePath, setFilePath] = useState('')
   const [note, setNote] = useState('')
   const [progress, setProgress] = useState(0)
   const [files, setFiles] = useState({})
   const [isUploaded, setIsUploaded] = useState(false)
 
   const uid = useSelector(state => state.authReducer.uid)
-  
+
   const submitHandler = event => {
     event.preventDefault()
   }
 
   const addFile = e => {
     e.preventDefault();
-    console.log("addFile submited")
     Object.keys(files.files).forEach(k => {
       file = files.files[k]
       rnd = v4()
@@ -53,7 +51,7 @@ function MusicFileForm() {
           }).then(s => {
             fileInput.current.value = null
             setIsUploaded(false)
-          });           
+          });
         }
       );
     })
@@ -67,7 +65,7 @@ function MusicFileForm() {
     e.preventDefault();
     const files = e.target.files
     let obj = { files: files, value: e.target.value }
-    setFiles(obj);    
+    setFiles(obj);
     setIsUploaded(true)
   }
 
@@ -88,7 +86,7 @@ function MusicFileForm() {
                 <option value="F">Concert F-natural</option>
                 <option value="F#">Concert F-sharp</option>
               </select>
-            </div>            
+            </div>
             <div className="form-group mr-2">
               <button className="btn btn-primary" type="submit" disabled={(isUploaded && note) ? false : true} onClick={addFile}>Upload File</button>
             </div>

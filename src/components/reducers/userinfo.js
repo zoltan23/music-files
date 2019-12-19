@@ -15,8 +15,7 @@ const userInfoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 lastName: action.lastName
-            }    
-          
+            }              
         default:
             return state
     }

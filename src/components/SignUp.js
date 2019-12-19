@@ -3,23 +3,20 @@ import firebase from '../services/firebase'
 import { db } from '../services/firebase'
 import "./SignUp.css"
 import { useSelector, useDispatch } from 'react-redux'
-import { CodeGenerator } from '@babel/generator'
 
 const SignUp = () => {
 
     const dispatch = useDispatch()
+
     //State variables
     const {firstName} = useSelector(state => ({...state.userInfoReducer}))
     const {lastName} = useSelector(state => ({...state.userInfoReducer}))
-    //const lastName = useSelector(state => state.lastName)
-    //const [firstName, setFirstName] = useState('')
-    //const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [choosePassword, setChoosePassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [instrument, setInstrument] = useState('-- Please select your instrument. --')
-    const [experience, setExperience] = useState('')
-    const [levelOfExperience, setLevelOfExperience] = useState('-- Please choose your level of experience. --')
+    const [experience, setExperience] = useState('-- Please choose your level of experience. --')
+    
 
     //Validation flag variables
     const [isFirstNameValid, setIsFirstNameValid] = useState(false)
@@ -35,7 +32,6 @@ const SignUp = () => {
     const validateFirstName = (e) => {
         setShouldValidate(true)
         setIsFirstNameValid(e.target.value.length > 0)
-
         dispatch({
             type: "SET_FIRSTNAME",
             payload: e.target.value
@@ -68,8 +64,6 @@ const SignUp = () => {
     }
 
     const isDisabled = () => {
-
-
         return (firstName && lastName && email && choosePassword && (choosePassword === confirmPassword) && isInstrumentValid && isExperienceValid) ? false : true
     }
 
@@ -122,7 +116,7 @@ const SignUp = () => {
             'Professional'
         ]
         setShouldValidate(true)
-        setLevelOfExperience(experience[num])
+        setExperience(experience[num])
         console.log('Level of Experience num >= 1', num >= 1)
         setIsExperienceValid(num >= 1)
     }
@@ -148,14 +142,14 @@ const SignUp = () => {
                 {viewFirebaseError()}
                 <div className="form-row">
                     <div className="col-md-6 mb-3">
-                        <label for="validationServer03">First Name</label>
+                        <label htmlFor="validationServer03">First Name</label>
                         <input className={getValidString(isFirstNameValid)} type="text" id="firstName" placeholder="First Name" onChange={validateFirstName} />
                         <div className="valid-feedback">
                             Looks good.
                         </div>
                     </div>
                     <div className="col-md-6 mb-3">
-                        <label for="validationServer03">Last Name</label>
+                        <label htmlFor="validationServer03">Last Name</label>
                         <input className={getValidString(isLasttNameValid)} type="text" id="lastName" placeholder="Last Name" onChange={validateLastName} />
                         <div className="valid-feedback">
                             Looks good.
@@ -164,7 +158,7 @@ const SignUp = () => {
                 </div>
                 <div className="form-row">
                     <div className="col-md-6">
-                        <label for="validationServer03">Email</label>
+                        <label htmlFor="validationServer03">Email</label>
                         <input className={getValidString(isEmailValid)} type="email" id="email" placeholder="Email" onChange={validateEmail} required />
                         <div className="invalid-feedback">
                             Please provide a valid email.
@@ -173,7 +167,7 @@ const SignUp = () => {
                 </div>
                 <div className="form-row">
                     <div className="col-md-6 mb-3">
-                        <label for="validationServer03">Choose Password (must be at least 6 characters long)</label>
+                        <label htmlFor="validationServer03">Choose Password (must be at least 6 characters long)</label>
                         <input className={getValidString(isChoosePasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateChoosePassword} />
                         <div className={"invalid-feedback"}>
                             Please provide a valid password.
@@ -182,7 +176,7 @@ const SignUp = () => {
                 </div>
                 <div className="form-row">
                     <div className="col-md-6 mb-3">
-                        <label for="validationServer03">Confirm Password</label>
+                        <label htmlFor="validationServer03">Confirm Password</label>
                         <input className={getValidString(isConfirmPasswordValid)} type="password" id="choosePassword" placeholder="Choose Password" onChange={validateConfirmPassword} />
                         <div className="invalid-feedback">
                             Password does not match.
@@ -196,12 +190,12 @@ const SignUp = () => {
                                 {instrument}
                             </button>
                             <div className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                                <a className="dropdown-item" href="#" onClick={e => setInstrumentType(1)}>Trumpet</a>
-                                <a className="dropdown-item" href="#" onClick={e => setInstrumentType(2)}>Clarinet</a>
-                                <a className="dropdown-item" href="#" onClick={e => setInstrumentType(3)}>Saxophone</a>
-                                <a className="dropdown-item" href="#" onClick={e => setInstrumentType(4)}>Trombone</a>
-                                <a className="dropdown-item" href="#" onClick={e => setInstrumentType(5)}>Baritone</a>
-                                <a className="dropdown-item" href="#" onClick={e => setInstrumentType(6)}>Tuba</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setInstrumentType(1)}>Trumpet</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setInstrumentType(2)}>Clarinet</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setInstrumentType(3)}>Saxophone</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setInstrumentType(4)}>Trombone</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setInstrumentType(5)}>Baritone</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setInstrumentType(6)}>Tuba</a>
                             </div>
                             <div className="invalid-feedback">
                                 Please select your instrument.
@@ -211,15 +205,15 @@ const SignUp = () => {
                     <div className="col-md-6 mb-3">
                         <div className="dropdown">
                             <button className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isExperienceValid)}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {levelOfExperience}
+                                {experience}
                             </button>
                             <div className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                                <a className="dropdown-item" href="#" onClick={e => setExperienceLevel(1)}>Beginner</a>
-                                <a className="dropdown-item" href="#" onClick={e => setExperienceLevel(2)}>Junior High</a>
-                                <a className="dropdown-item" href="#" onClick={e => setExperienceLevel(3)}>High School</a>
-                                <a className="dropdown-item" href="#" onClick={e => setExperienceLevel(4)}>College</a>
-                                <a className="dropdown-item" href="#" onClick={e => setExperienceLevel(5)}>Post Collegiate/Community Band</a>
-                                <a className="dropdown-item" href="#" onClick={e => setExperienceLevel(6)}>Professional</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setExperienceLevel(1)}>Beginner</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setExperienceLevel(2)}>Junior High</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setExperienceLevel(3)}>High School</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setExperienceLevel(4)}>College</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setExperienceLevel(5)}>Post Collegiate/Community Band</a>
+                                <a className="dropdown-item" href="#!" onClick={e => setExperienceLevel(6)}>Professional</a>
                             </div>
                         </div>
                     </div>

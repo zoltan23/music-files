@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import Navbar from './components/layout/Navbar'
 import Landing from './components/Landing'
-import SignOut from './components/SignOut'
 import SignUp from './components/SignUp'
 import Recorder from './components/Recorder'
 import SignIn from './components/SignIn'
@@ -14,7 +13,6 @@ import "./App.css"
 import { useDispatch, useSelector } from 'react-redux'
 
 function App() {
-
   const dispatch = useDispatch()
   const isLoggedIn = useSelector(state => state.authReducer.isLoggedIn)
 
@@ -26,14 +24,17 @@ function App() {
       dispatch({type:'SET_UID', uid : firebaseUser.uid})
       dispatch({type:'SET_ISLOGGEDIN', isLoggedIn : true })
     } else {
+      dispatch({type:'SET_EMAIL', email : ''})
+      dispatch({type:'SET_FIRSTNAME', firstName : ''})
+      dispatch({type:'SET_UID', uid : ''})
       dispatch({type:'SET_ISLOGGEDIN', isLoggedIn : false })
     }
   });
 
   return (
-    <div className="container">
+ <Fragment>
       <BrowserRouter>
-        { !isLoggedIn ? <Redirect to="/signin" /> : <Redirect to="/landing" />}
+        { !isLoggedIn ? <Redirect to="/signin" /> : <Redirect to="/landing" />} 
         <Navbar />
         <Switch>
           <Route path='/landing' component={Landing} />
@@ -41,13 +42,12 @@ function App() {
           <Route path='/settings' component={Settings} />
           <Route path='/signin' component={SignIn} />
           <Route path='/signup' component={SignUp} />
-          <Route path='/signout' component={SignOut} />
           <Route path='/recorder' component={Recorder} />
           <Route path='/reset' component={ResetPassword} />
           <Route path="*" component={Landing} />
         </Switch>
       </BrowserRouter>
-   </div>
+      </Fragment>
   );
 }
 

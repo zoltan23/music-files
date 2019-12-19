@@ -391,7 +391,7 @@ class Recorder extends Component {
                                 {this.state.micLabel}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">{this.state.micLabel}</a>
+                                <a class="dropdown-item" href="#!">{this.state.micLabel}</a>
                             </div>
                         </div>
                     </div>
@@ -428,11 +428,11 @@ class Recorder extends Component {
 
                 <div class="row">
                     <div class="col-6">
-                        <a onClick={e => this.clickRecord(e)} href="#" class={this.state.toggleRecord ? 'hidden' : 'btn btn-danger btn-block'}><FontAwesomeIcon icon={faCircle} />&nbsp;Record</a>
-                        <a onClick={e => this.clickStop(e)} href="#" class={this.state.toggleRecord ? 'btn btn-danger btn-block' : 'hidden'}><FontAwesomeIcon icon={faCircle} />&nbsp;Stop</a>
+                        <a onClick={e => this.clickRecord(e)} href="#!" class={this.state.toggleRecord ? 'hidden' : 'btn btn-danger btn-block'}><FontAwesomeIcon icon={faCircle} />&nbsp;Record</a>
+                        <a onClick={e => this.clickStop(e)} href="#!" class={this.state.toggleRecord ? 'btn btn-danger btn-block' : 'hidden'}><FontAwesomeIcon icon={faCircle} />&nbsp;Stop</a>
                     </div>
                     <div class="col-6">
-                        <a onClick={e => this.uploadRecordAudio(e)} href="#" class={this.state.showUpload ? 'btn btn-success btn-block' : 'hidden'} ><FontAwesomeIcon icon={faCloudUploadAlt} />&nbsp;Upload </a>
+                        <a onClick={e => this.uploadRecordAudio(e)} href="#!" class={this.state.showUpload ? 'btn btn-success btn-block' : 'hidden'} ><FontAwesomeIcon icon={faCloudUploadAlt} />&nbsp;Upload </a>
                     </div>
                 </div>
 

@@ -41,7 +41,7 @@ const SignIn = (props) => {
         }
     }
 
-    const form = <form className="form-signin">
+    const form = (<form className="form-signin">
         {() => viewFirebaseError() }
         <div className="text-center mb-4">
             <img className="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
@@ -63,13 +63,14 @@ const SignIn = (props) => {
             <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handlePasswordReset}>Password Reset</button>
         </div>
         <p className="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
-    </form>
+    </form>)
 
-    const reset = <div>
+    const reset = (<div>
         <p>An email has been sent to reset your password. You will be redirected to the hompage shortly.</p>
-    </div>
+    </div>)
 
     const html = renderFlag ? form : reset
+    
     return (
         <div>
             {html}

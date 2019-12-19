@@ -1,12 +1,11 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import './Landing.css'
 import Title from "../title2.png";
 
 const Landing = () => {
     return (
         <div className="card mb-3">
-            <img src={Title} className="img-height img-center" />
+            <img src={Title} className="img-height img-center" alt="" />
             <div className="card-body">
                 <h5 className="card-title">Welcome to Jam with Our Band</h5>
                 <div className="card-text">

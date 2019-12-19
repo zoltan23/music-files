@@ -46,7 +46,7 @@ const MusicFileList = (props) => {
         setMusicFiles(pp)
       })
     })
-  }, [])
+  }, [uid])
 
   return (
     <div className="container">
@@ -58,7 +58,7 @@ const MusicFileList = (props) => {
           <div className="col-sm-3"><FontAwesomeIcon icon={faMusic} />&nbsp;{file.note}</div>
           <div className="col-sm-4">
             <AudioComponent file={file} />
-            <FontAwesomeIcon className="fa-3x align" id="buttonAlert" color="red" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id, file.fileLocation)} />
+            <FontAwesomeIcon className="fa-3x align" color="red" icon={faTrashAlt} id={file.id} onClick={e => deleteItem(file.id, file.fileLocation)} />
           </div>
         </div>
       ))}
