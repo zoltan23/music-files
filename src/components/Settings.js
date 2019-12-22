@@ -4,7 +4,8 @@ import { db } from '../services/firebase'
 import { useSelector } from 'react-redux'
 
 const Settings = () => {
-    const uid = useSelector(state => state.authReducer.uid)
+    // const uid = useSelector(state => state.authReducer.uid)
+    const uid = 'dOBcQk0Iz6XhnfK7ma10HDUCUcB2'
 
     //State variables
     const [firstName, setFirstName] = useState('')
@@ -14,8 +15,9 @@ const Settings = () => {
     const [updateConfirmPassword, setUpdateConfirmPassword] = useState('')
     const [instrument, setInstrument] = useState('')
     const [experience, setExperience] = useState('')
-    const [docId, setDocId] = useState('')
-
+    const [docId, setDocId] = useState('uYYq0889hzM7D0MeDu8N')
+    const [didUpdate, setDidUpdate ] = useState(false)
+    const [upDated, setUpdated] = useState('Updated')
     //Validation flag variables
     const [isFirstNameValid, setIsFirstNameValid] = useState(false)
     const [isLasttNameValid, setIsLastNameValid] = useState(false)
@@ -29,6 +31,7 @@ const Settings = () => {
 
     useEffect(() => {
         console.log("UseEffect called in Settings!")
+        const uid = 'dOBcQk0Iz6XhnfK7ma10HDUCUcB2'
         getMusicCollection()
     }, [])
 
@@ -93,7 +96,6 @@ const Settings = () => {
     }
 
     const updateUserInfo = () => {
-        let mess;
         let updateBool = window.confirm("Click OK to update your user information!")
         if (updateBool) {
             db.collection("music").doc(uid).collection('userInfo').doc(docId).update({
@@ -101,10 +103,24 @@ const Settings = () => {
                 lastName: lastName,
                 instrument: instrument,
                 experience: experience
-            }).then(() => window.alert("Your information was successfully updated!"))
-              .catch(() => window.alert("You information was not updated"))
+            }).then(function () {
+                setDidUpdate(true)
+            })
+                .catch(function (error) {
+                    // The document probably doesn't exist.
+                    console.log("Error updating document: ", error);
+                });
         }
     }
+    
+    const mess = () => {
+        if(didUpdate){
+            setTimeout(() => setUpdated('d-none'), 6000)
+            return (<div className={`alert alert-success ${upDated}`} role="alert">
+                Your user information has been successfully updated!
+            </div>)
+    }  
+}
 
     const deleteUser = () => {
         var user = firebase.auth.currentUser;
@@ -113,7 +129,7 @@ const Settings = () => {
         if (deleteBool) {
             user.delete().then(function () {
             }).catch(function (error) {
-               console.log('[delete] error', error)
+                console.log('[delete] error', error)
             });
         }
     }
@@ -163,6 +179,7 @@ const Settings = () => {
 
     return (
         <div className="card">
+            {mess()}
             {viewFirebaseError()}
             <div className="form-row">
                 <div className="col-md-6 mb-3">
@@ -258,7 +275,7 @@ const Settings = () => {
                     <button className="btn form-control btn-primary " disabled={isDisabled()} onClick={updateUserInfo}>Update User Information</button>
                     <button className="btn form-control btn-danger mt-3" disabled={false} onClick={deleteUser}>Delete Your Profile</button>
                 </div>
-                
+
             </div>
         </div>
     )

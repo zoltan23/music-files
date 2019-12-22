@@ -32,6 +32,7 @@ const SignIn = (props) => {
 
     const viewFirebaseError = () => {
         if (firebaseError) {
+            console.log("Firebase erro...")
             console.log("Firebase error", firebaseError)
             return (
                 <div class="alert alert-danger" role="alert">
@@ -42,7 +43,7 @@ const SignIn = (props) => {
     }
 
     const form = (<form className="form-signin">
-        {() => viewFirebaseError() }
+        { viewFirebaseError() }
         <div className="text-center mb-4">
             <img className="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
             <h1 className="h3 mb-3 font-weight-normal">Jam with our Band</h1>
