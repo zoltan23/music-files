@@ -93,22 +93,29 @@ const Settings = () => {
     }
 
     const updateUserInfo = () => {
-        db.collection("music").doc(uid).collection('userInfo').doc(docId).update({
-            firstName: firstName,
-            lastName: lastName,
-            instrument: instrument,
-            experience: experience
-        })
+        let mess;
+        let updateBool = window.confirm("Click OK to update your user information!")
+        if (updateBool) {
+            db.collection("music").doc(uid).collection('userInfo').doc(docId).update({
+                firstName: firstName,
+                lastName: lastName,
+                instrument: instrument,
+                experience: experience
+            }).then(() => window.alert("Your information was successfully updated!"))
+              .catch(() => window.alert("You information was not updated"))
+        }
     }
 
     const deleteUser = () => {
         var user = firebase.auth.currentUser;
-        user.delete().then(function () {
-            // User deleted.
-        }).catch(function (error) {
-            // An error happened.
-        });
-
+        console.log('[delete] user', user)
+        let deleteBool = window.confirm("Delete")
+        if (deleteBool) {
+            user.delete().then(function () {
+            }).catch(function (error) {
+               console.log('[delete] error', error)
+            });
+        }
     }
 
     const getValidString = (stateBool) => {
@@ -245,12 +252,13 @@ const Settings = () => {
             </div>
                 </div>
             </div>
-            <div className="form-row">
-                <div className="form-group">
+            <div className="form-row ">
+                <div className="form-group col-md-12">
 
-                    <button className="btn form-control" disabled={isDisabled()} onClick={updateUserInfo}>Update User Information</button>
-                    <button className="btn form-control" disabled={false} onClick={deleteUser}>Delete Your Profile</button>
+                    <button className="btn form-control btn-primary " disabled={isDisabled()} onClick={updateUserInfo}>Update User Information</button>
+                    <button className="btn form-control btn-danger mt-3" disabled={false} onClick={deleteUser}>Delete Your Profile</button>
                 </div>
+                
             </div>
         </div>
     )

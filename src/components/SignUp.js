@@ -2,22 +2,18 @@ import React, { useState } from 'react'
 import firebase from '../services/firebase'
 import { db } from '../services/firebase'
 import "./SignUp.css"
-import { useSelector, useDispatch } from 'react-redux'
+
 
 const SignUp = () => {
-
-    const dispatch = useDispatch()
-
     //State variables
-    const {firstName} = useSelector(state => ({...state.userInfoReducer}))
-    const {lastName} = useSelector(state => ({...state.userInfoReducer}))
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [choosePassword, setChoosePassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [instrument, setInstrument] = useState('-- Please select your instrument. --')
     const [experience, setExperience] = useState('-- Please choose your level of experience. --')
     
-
     //Validation flag variables
     const [isFirstNameValid, setIsFirstNameValid] = useState(false)
     const [isLasttNameValid, setIsLastNameValid] = useState(false)
@@ -32,19 +28,13 @@ const SignUp = () => {
     const validateFirstName = (e) => {
         setShouldValidate(true)
         setIsFirstNameValid(e.target.value.length > 0)
-        dispatch({
-            type: "SET_FIRSTNAME",
-            payload: e.target.value
-        })
+        setFirstName(e.target.value)
     }
 
     const validateLastName = (e) => {
         setShouldValidate(true)
         setIsLastNameValid(e.target.value.length > 0)
-        dispatch({
-            type: "SET_LASTNAME",
-            payload: e.target.value
-        })
+        setLastName(e.target.value)
     }
 
     const validateEmail = (e) => {
@@ -82,7 +72,6 @@ const SignUp = () => {
             console.log(e)
             setFirebaseError(e.message)
         }
-
     }
 
     const getValidString = (stateBool) => {
@@ -221,7 +210,6 @@ const SignUp = () => {
                 <button className="btn btn-primary w-100" disabled={isDisabled()} onClick={e => handleSignUp(e)}>Sign Up</button>
             </div>
             <div className="bottom-padding" />
-
         </form>
 
     )
