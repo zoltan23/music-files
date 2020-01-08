@@ -12,6 +12,7 @@ import { auth } from './services/firebase'
 import ResetPassword from './components/ResetPassword';
 import "./App.css"
 
+// THis is a test
 function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
