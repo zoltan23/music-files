@@ -12,6 +12,7 @@ import ResetPassword from './components/ResetPassword';
 import "./App.css"
 import { useDispatch, useSelector } from 'react-redux'
 
+// THis is a test
 function App() {
   const dispatch = useDispatch()
   const isLoggedIn = useSelector(state => state.authReducer.isLoggedIn)
