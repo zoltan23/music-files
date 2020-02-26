@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import firebase from '../services/firebase'
-import { db } from '../services/firebase'
+import firebase from '../../services/firebase'
+import { db } from '../../services/firebase'
 import { useSelector } from 'react-redux'
 
 const Settings = () => {

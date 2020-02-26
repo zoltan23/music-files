@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import "./Callout.css"
 import RecordRTC, { invokeSaveAsDialog, StereoAudioRecorder } from "recordrtc"
-import { storage, db } from "../services/firebase"
+import { storage, db } from "../../services/firebase"
 import { v4 } from 'uuid';
 
 class Recorder extends Component {

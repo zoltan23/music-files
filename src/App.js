@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import Navbar from './components/layout/Navbar'
-import Landing from './components/Landing'
-import SignUp from './components/SignUp'
-import Recorder from './components/Recorder'
-import SignIn from './components/SignIn'
+import Landing from './components/screens/Landing'
+import SignUp from './components/screens/SignUp'
+import Recorder from './components/screens/Recorder'
+import SignIn from './components/screens/SignIn'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
-import Settings from './components/Settings'
+import Settings from './components/screens/Settings'
 import { auth } from './services/firebase'
-import ResetPassword from './components/ResetPassword';
+import ResetPassword from './components/screens/ResetPassword';
 import "./App.css"
 import { useDispatch, useSelector } from 'react-redux'
 

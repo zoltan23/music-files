@@ -1,6 +1,6 @@
 import React from 'react'
 import './Landing.css'
-import Title from "../title2.png";
+import Title from "../../title2.png";
 
 const Landing = () => {
     return (
