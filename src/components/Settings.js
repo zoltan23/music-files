@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import firebase from '../services/firebase'
 import { db } from '../services/firebase'
-import { useSelector } from 'react-redux'
 
 const Settings = () => {
     // const uid = useSelector(state => state.authReducer.uid)
@@ -31,7 +30,6 @@ const Settings = () => {
 
     useEffect(() => {
         console.log("UseEffect called in Settings!")
-        const uid = 'dOBcQk0Iz6XhnfK7ma10HDUCUcB2'
         getMusicCollection()
     }, [])
 
