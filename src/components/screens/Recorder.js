@@ -103,7 +103,7 @@ class Recorder extends Component {
             let canvas = this.refs.analyzerCanvas;
             let ctx = canvas.getContext('2d');
 
-            // analyser.smoothingTimeConstant = .01
+             analyser.smoothingTimeConstant = .01
 
             audioSrc.connect(analyser);
             // audioSrc.connect(audioContext.destination);
