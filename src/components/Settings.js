@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import firebase from '../services/firebase'
 import { db } from '../services/firebase'
+import { useSelector } from 'react-redux'
 
 const Settings = () => {
-    // const uid = useSelector(state => state.authReducer.uid)
-    const uid = 'dOBcQk0Iz6XhnfK7ma10HDUCUcB2'
+    const uid = useSelector(state => state.authReducer.uid)
 
     //State variables
     const [firstName, setFirstName] = useState('')
@@ -14,7 +14,8 @@ const Settings = () => {
     const [updateConfirmPassword, setUpdateConfirmPassword] = useState('')
     const [instrument, setInstrument] = useState('')
     const [experience, setExperience] = useState('')
-    const [docId, setDocId] = useState('uYYq0889hzM7D0MeDu8N')
+    //const [docId, setDocId] = useState('uYYq0889hzM7D0MeDu8N')
+    const [docId, setDocId] = useState('')
     const [didUpdate, setDidUpdate ] = useState(false)
     const [upDated, setUpdated] = useState('Updated')
     //Validation flag variables

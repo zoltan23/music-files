@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import Navbar from './components/layout/Navbar'
 import Landing from './components/Landing'
@@ -7,35 +7,45 @@ import Recorder from './components/Recorder'
 import SignIn from './components/SignIn'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Settings from './components/Settings'
-import { auth } from './services/firebase'
+import { auth, db } from './services/firebase'
 import ResetPassword from './components/ResetPassword';
 import "./App.css"
 import { useDispatch, useSelector } from 'react-redux'
 
-// THis is a test
+
 function App() {
   const dispatch = useDispatch()
   const isLoggedIn = useSelector(state => state.authReducer.isLoggedIn)
 
-  auth.onAuthStateChanged(firebaseUser => {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+    
+  auth.onAuthStateChanged(async firebaseUser => {
     console.log('firebase user', firebaseUser)
     if (firebaseUser) {
-      dispatch({type:'SET_EMAIL', email : firebaseUser.email})
-      dispatch({type:'SET_FIRSTNAME', firstName : firebaseUser.email})
-      dispatch({type:'SET_UID', uid : firebaseUser.uid})
-      dispatch({type:'SET_ISLOGGEDIN', isLoggedIn : true })
+      console.log('firebaseUser', firebaseUser)
+      dispatch({ type: 'SET_EMAIL', email: firebaseUser.email })
+      //dispatch({type:'SET_FIRSTNAME', firstName : firebaseUser.firstName})
+      dispatch({ type: 'SET_UID', uid: firebaseUser.uid })
+      dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: true })
+     
+      const snapshot = await db.collection('music').doc(firebaseUser.uid).collection('userInfo').get()
+      snapshot.docs.forEach(doc =>  {setFirstName(doc.data().firstName)
+                                setLastName(doc.data().lastName)})
+      dispatch({ type: 'SET_FIRSTNAME', firstName: firstName })
+      dispatch({ type: 'SET_LASTNAME', lastName: lastName })
     } else {
-      dispatch({type:'SET_EMAIL', email : ''})
-      dispatch({type:'SET_FIRSTNAME', firstName : ''})
-      dispatch({type:'SET_UID', uid : ''})
-      dispatch({type:'SET_ISLOGGEDIN', isLoggedIn : false })
+      dispatch({ type: 'SET_EMAIL', email: '' })
+      dispatch({ type: 'SET_FIRSTNAME', firstName: '' })
+      dispatch({ type: 'SET_UID', uid: '' })
+      dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: false })
     }
   });
-
+ 
   return (
- <Fragment>
+    <Fragment>
       <BrowserRouter>
-        { !isLoggedIn ? <Redirect to="/signin" /> : <Redirect to="/landing" />} 
+        {!isLoggedIn ? <Redirect to="/signin" /> : <Redirect to="/landing" />}
         <Navbar />
         <Switch>
           <Route path='/landing' component={Landing} />
@@ -48,7 +58,7 @@ function App() {
           <Route path="*" component={Landing} />
         </Switch>
       </BrowserRouter>
-      </Fragment>
+    </Fragment>
   );
 }
 
