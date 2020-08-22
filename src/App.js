@@ -3,18 +3,18 @@ import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import Navbar from './components/layout/Navbar'
 import Landing from './components/screens/Landing'
 import SignUp from './components/screens/SignUp'
-import SignUp2 from './components/screens/SignUp2'
 import Recorder from './components/screens/Recorder'
 import SignIn from './components/screens/SignIn'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Settings from './components/screens/Settings'
-import { auth } from './services/firebase'
+import { auth, db } from './services/firebase'
 import ResetPassword from './components/screens/ResetPassword';
 import { useDispatch, useSelector } from 'react-redux'
+import Settings2 from './components/screens/Settings2';
 import "./App.css"
 
-// THis is a test
 function App() {
+  console.log("App .js called")
   const dispatch = useDispatch()
   const isLoggedIn = useSelector(state => state.authReducer.isLoggedIn)
 
@@ -22,12 +22,10 @@ function App() {
     console.log('firebase user', firebaseUser)
     if (firebaseUser) {
       dispatch({ type: 'SET_EMAIL', email: firebaseUser.email })
-      dispatch({ type: 'SET_FIRSTNAME', firstName: firebaseUser.email })
       dispatch({ type: 'SET_UID', uid: firebaseUser.uid })
       dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: true })
     } else {
       dispatch({ type: 'SET_EMAIL', email: '' })
-      dispatch({ type: 'SET_FIRSTNAME', firstName: '' })
       dispatch({ type: 'SET_UID', uid: '' })
       dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: false })
     }
@@ -49,7 +47,6 @@ function App() {
           <Route path="*" component={Landing} />
         </Switch>
       </BrowserRouter>
-      <SignUp2 />
     </>
   );
 }
