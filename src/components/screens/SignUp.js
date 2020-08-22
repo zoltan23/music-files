@@ -5,6 +5,8 @@ import "./SignUp.css"
 
 
 const SignUp = () => {
+
+
     //State variables
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -59,9 +61,10 @@ const SignUp = () => {
 
     const handleSignUp = async (e) => {
         e.preventDefault()
+        
         try {
             const user = await firebase.auth.createUserWithEmailAndPassword(email, choosePassword)
-            console.log('[Signup] user', user)
+            console.log('[Signup] user:', user.user.id)
             await db.collection("music").doc(user.user.uid).collection('userInfo').doc().set({
                 firstName: firstName,
                 lastName: lastName,

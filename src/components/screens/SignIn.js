@@ -32,7 +32,6 @@ const SignIn = (props) => {
 
     const viewFirebaseError = () => {
         if (firebaseError) {
-            console.log("Firebase erro...")
             console.log("Firebase error", firebaseError)
             return (
                 <div class="alert alert-danger" role="alert">

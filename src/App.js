@@ -1,16 +1,17 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import MusicFileForm from './components/MusicFiles/MusicFileForm';
 import Navbar from './components/layout/Navbar'
 import Landing from './components/screens/Landing'
 import SignUp from './components/screens/SignUp'
+import SignUp2 from './components/screens/SignUp2'
 import Recorder from './components/screens/Recorder'
 import SignIn from './components/screens/SignIn'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Settings from './components/screens/Settings'
 import { auth } from './services/firebase'
 import ResetPassword from './components/screens/ResetPassword';
-import "./App.css"
 import { useDispatch, useSelector } from 'react-redux'
+import "./App.css"
 
 // THis is a test
 function App() {
@@ -20,22 +21,22 @@ function App() {
   auth.onAuthStateChanged(firebaseUser => {
     console.log('firebase user', firebaseUser)
     if (firebaseUser) {
-      dispatch({type:'SET_EMAIL', email : firebaseUser.email})
-      dispatch({type:'SET_FIRSTNAME', firstName : firebaseUser.email})
-      dispatch({type:'SET_UID', uid : firebaseUser.uid})
-      dispatch({type:'SET_ISLOGGEDIN', isLoggedIn : true })
+      dispatch({ type: 'SET_EMAIL', email: firebaseUser.email })
+      dispatch({ type: 'SET_FIRSTNAME', firstName: firebaseUser.email })
+      dispatch({ type: 'SET_UID', uid: firebaseUser.uid })
+      dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: true })
     } else {
-      dispatch({type:'SET_EMAIL', email : ''})
-      dispatch({type:'SET_FIRSTNAME', firstName : ''})
-      dispatch({type:'SET_UID', uid : ''})
-      dispatch({type:'SET_ISLOGGEDIN', isLoggedIn : false })
+      dispatch({ type: 'SET_EMAIL', email: '' })
+      dispatch({ type: 'SET_FIRSTNAME', firstName: '' })
+      dispatch({ type: 'SET_UID', uid: '' })
+      dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: false })
     }
   });
 
   return (
- <Fragment>
+    <>
       <BrowserRouter>
-        { !isLoggedIn ? <Redirect to="/signin" /> : <Redirect to="/landing" />} 
+        {!isLoggedIn ? <Redirect to="/signin" /> : <Redirect to="/landing" />}
         <Navbar />
         <Switch>
           <Route path='/landing' component={Landing} />
@@ -48,7 +49,8 @@ function App() {
           <Route path="*" component={Landing} />
         </Switch>
       </BrowserRouter>
-      </Fragment>
+      <SignUp2 />
+    </>
   );
 }
 
