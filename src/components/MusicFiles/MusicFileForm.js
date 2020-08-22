@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { db } from '../../services/firebase'
-import './MusicFileForm.css'
+import { db } from 'firebase'
 import MusicFileList from './MusicFileList'
-import { storage } from '../../services/firebase'
+import { storage } from 'firebase'
 import { v4 } from 'uuid';
 import { useSelector } from 'react-redux'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './MusicFileForm.css'
 
 function MusicFileForm() {
   var storageRef, file, rnd, storagePath
@@ -70,7 +70,7 @@ function MusicFileForm() {
   }
 
   return (
-    <div>
+    <>
       <div className="card">
         <div className="card-body">
           <form className="form-inline justify-content-center" onSubmit={submitHandler}>
@@ -94,7 +94,7 @@ function MusicFileForm() {
         </div>
       </div>
       <div><MusicFileList userId={uid} /></div>
-    </div>
+    </>
   )
 }
 

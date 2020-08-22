@@ -8,7 +8,6 @@ const authReducer = (state = initialState, action) => {
     
     switch (action.type) {
         case 'SET_ISLOGGEDIN':
-            console.log('IsLoggedIn!!!', action.isLoggedIn)
             return {
                 ...state,
                 isLoggedIn: action.isLoggedIn
@@ -19,7 +18,6 @@ const authReducer = (state = initialState, action) => {
                 email: action.email
             }
         case 'SET_UID':
-            console.log('Yea uid!', action.uid)
             return {
                 ...state,
                 uid: action.uid

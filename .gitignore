@@ -1,6 +1,5 @@
 node_modules
 .DS_Store
-
 src/services/firebase_config.js
 src/services/firebase.js
 
