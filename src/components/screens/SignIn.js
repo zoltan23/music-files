@@ -1,8 +1,47 @@
-import React, { useState } from 'react'
-import { auth } from '../../services/firebase'
+import React, { useEffect, useState } from 'react'
+import { auth, db } from '../../services/firebase'
+import { useDispatch, useSelector } from 'react-redux'
 import './SignIn.css'
 
 const SignIn = (props) => {
+    console.log("Sign in Called!!!")
+    const dispatch = useDispatch()
+
+    // const authInfo = useSelector(state => state.authReducer.uid)
+    // const { uid } = authInfo
+    // console.log('uid', uid)
+
+    // useEffect(() => {
+    //  const auth = async () => auth.onAuthStateChanged(firebaseUser => {
+    //         console.log('firebase user [signin]', firebaseUser)
+    //         if (firebaseUser) {
+    //             dispatch({ type: 'SET_EMAIL', email: firebaseUser.email })
+    //             dispatch({ type: 'SET_UID', uid: firebaseUser.uid })
+    //             dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: true })
+      
+    //         } else {
+    //             dispatch({ type: 'SET_EMAIL', email: '' })
+    //             dispatch({ type: 'SET_UID', uid: '' })
+    //             dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: false })
+    //         }
+    //     })
+  
+    // }, [])
+
+    const getUserInfo = async (uid) => {
+        console.log("get user called")
+        const snapshot = await db.collection('music').doc(uid).collection('userInfo').get()
+        snapshot.docs.forEach(doc => {
+            console.log('doc_id', doc.ref.id)
+            dispatch({ type: 'SET_FIRSTNAME', firstName: doc.data().firstName})
+            dispatch({ type: 'SET_LASTNAME', lastName: doc.data().lastName})
+            dispatch({ type: 'SET_EXPERIENCE', experience: doc.data().experience})
+            dispatch({ type: 'SET_INSTRUMENT', instrument: doc.data().instrument})
+            dispatch({ type: 'SET_DOCREF', docRef: doc.ref.id})
+        })
+        console.log('snapshot', snapshot)
+    }
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [renderFlag, setRenderFlag] = useState(true)
@@ -12,7 +51,8 @@ const SignIn = (props) => {
         e.preventDefault()
         auth.signInWithEmailAndPassword(email, password)
             .then((user) => {
-                console.log('sign in with email and password')
+                console.log('signin', user)
+                getUserInfo(user.user.uid)
             })
             .catch(error => setFirebaseError(error))
     }
@@ -32,7 +72,6 @@ const SignIn = (props) => {
 
     const viewFirebaseError = () => {
         if (firebaseError) {
-            console.log("Firebase erro...")
             console.log("Firebase error", firebaseError)
             return (
                 <div class="alert alert-danger" role="alert">
@@ -43,7 +82,7 @@ const SignIn = (props) => {
     }
 
     const form = (<form className="form-signin">
-        { viewFirebaseError() }
+        {viewFirebaseError()}
         <div className="text-center mb-4">
             <img className="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
             <h1 className="h3 mb-3 font-weight-normal">Jam with our Band</h1>
@@ -71,7 +110,7 @@ const SignIn = (props) => {
     </div>)
 
     const html = renderFlag ? form : reset
-    
+
     return (
         <div>
             {html}

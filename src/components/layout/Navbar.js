@@ -11,7 +11,6 @@ const Navbar = () => {
 
     const links = isLoggedIn ? <SignedInLinks /> : <SignedOutLinks />
 
-
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

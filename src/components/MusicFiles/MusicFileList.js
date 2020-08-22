@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { db, storage, auth } from '../../services/firebase'
-import './MusicFileList.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMusic, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import Classify from './Classify.js'
 import '../../../src/icons/my-icons-collection/font/flaticon.css'
 import { useSelector } from 'react-redux'
+import './MusicFileList.css'
 
 const MusicFileList = (props) => {
 
@@ -17,6 +17,12 @@ const MusicFileList = (props) => {
       return (
         <div>
           <h2>Uploaded Files</h2>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <h2>You don't have any uploaded files currently!</h2>
         </div>
       )
     }

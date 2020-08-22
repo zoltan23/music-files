@@ -98,7 +98,7 @@ const Settings = () => {
     const updateUserInfo = () => {
         let updateBool = window.confirm("Click OK to update your user information!")
         if (updateBool) {
-            db.collection("music").doc(uid).collection('userInfo').doc(docId).update({
+            db.collection("music").doc('3JFLCC4eJ0eNKwUhkfroAgik8LD2').collection('userInfo').doc(docId).update({
                 firstName: firstName,
                 lastName: lastName,
                 instrument: instrument,
