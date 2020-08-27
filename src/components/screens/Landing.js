@@ -4,7 +4,7 @@ import Title from "../../title2.png";
 
 const Landing = () => {
     return (
-        <div className="card mb-3">
+        <div className="card mb-3 container">
             <img src={Title} className="img-height img-center" alt="" />
             <div className="card-body">
                 <h5 className="card-title">Welcome to Jam with Our Band</h5>
@@ -24,7 +24,7 @@ const Landing = () => {
                         <dd>The recordings will be used to train a machine learning algorithm that will be able to determine how stable your long tones are. </dd>
                     </dl>
                 </div>
-                <p className="card-text"><small className="text-muted">Last updated 3 mins ago</small></p>
+                {/* <p className="card-text"><small className="text-muted">Last updated 3 mins ago</small></p> */}
             </div>
         </div>
 

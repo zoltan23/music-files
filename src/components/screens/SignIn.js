@@ -1,51 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { auth, db } from '../../services/firebase'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import './SignIn.css'
 
 const SignIn = (props) => {
-    console.log("Sign in Called!!!")
     const dispatch = useDispatch()
 
-    // const authInfo = useSelector(state => state.authReducer.uid)
-    // const { uid } = authInfo
-    // console.log('uid', uid)
-
-    // useEffect(() => {
-    //  const auth = async () => auth.onAuthStateChanged(firebaseUser => {
-    //         console.log('firebase user [signin]', firebaseUser)
-    //         if (firebaseUser) {
-    //             dispatch({ type: 'SET_EMAIL', email: firebaseUser.email })
-    //             dispatch({ type: 'SET_UID', uid: firebaseUser.uid })
-    //             dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: true })
-      
-    //         } else {
-    //             dispatch({ type: 'SET_EMAIL', email: '' })
-    //             dispatch({ type: 'SET_UID', uid: '' })
-    //             dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: false })
-    //         }
-    //     })
-  
-    // }, [])
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [renderFlag, setRenderFlag] = useState(true)
+    const [firebaseError, setFirebaseError] = useState(false)
 
     const getUserInfo = async (uid) => {
         console.log("get user called")
         const snapshot = await db.collection('music').doc(uid).collection('userInfo').get()
         snapshot.docs.forEach(doc => {
             console.log('doc_id', doc.ref.id)
-            dispatch({ type: 'SET_FIRSTNAME', firstName: doc.data().firstName})
-            dispatch({ type: 'SET_LASTNAME', lastName: doc.data().lastName})
-            dispatch({ type: 'SET_EXPERIENCE', experience: doc.data().experience})
-            dispatch({ type: 'SET_INSTRUMENT', instrument: doc.data().instrument})
-            dispatch({ type: 'SET_DOCREF', docRef: doc.ref.id})
+            dispatch({ type: 'SET_FIRSTNAME', firstName: doc.data().firstName })
+            dispatch({ type: 'SET_LASTNAME', lastName: doc.data().lastName })
+            dispatch({ type: 'SET_EXPERIENCE', experience: doc.data().experience })
+            dispatch({ type: 'SET_INSTRUMENT', instrument: doc.data().instrument })
+            dispatch({ type: 'SET_DOCREF', docRef: doc.ref.id })
         })
         console.log('snapshot', snapshot)
     }
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [renderFlag, setRenderFlag] = useState(true)
-    const [firebaseError, setFirebaseError] = useState(false)
+    // const getAuthInfo = (user) => {
+    //     if (user) {
+    //         dispatch({ type: 'SET_EMAIL', email: user.email })
+    //         dispatch({ type: 'SET_UID', uid: user.uid })
+    //         dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: true })
+
+    //     } else {
+    //         dispatch({ type: 'SET_EMAIL', email: '' })
+    //         dispatch({ type: 'SET_UID', uid: '' })
+    //         dispatch({ type: 'SET_ISLOGGEDIN', isLoggedIn: false })
+    //     }
+    // }
 
     const handleSignIn = (e) => {
         e.preventDefault()
@@ -53,6 +44,7 @@ const SignIn = (props) => {
             .then((user) => {
                 console.log('signin', user)
                 getUserInfo(user.user.uid)
+               // getAuthInfo(user)
             })
             .catch(error => setFirebaseError(error))
     }

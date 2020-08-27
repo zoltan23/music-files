@@ -3,7 +3,6 @@ import ReusableInputField from '../reusable/ReusableInputField';
 import firebase from '../../services/firebase'
 import { db } from '../../services/firebase'
 import DropDown from '../reusable/DropDown';
-import './SignUp.css';
 
 export default function SignUp(props) {
 
@@ -62,7 +61,7 @@ export default function SignUp(props) {
     }
 
     return (
-        <form>
+        <form className="mt-5">
             <div className="container">
                 {viewFirebaseError()}
                 <div className="form-row">
@@ -96,7 +95,7 @@ export default function SignUp(props) {
                             'Saxophone',
                             'Trombone',
                             'Baritone',
-                            'Tuba']} onUpdateInput={handleOnChange} />
+                            'Tuba']} placeholder="-- Please select your instrument. --" onUpdateInput={handleOnChange} />
                     </div>
                     <div className="col-md-6 mb-3">
                         <DropDown name="experience" dropArr={[
@@ -107,7 +106,7 @@ export default function SignUp(props) {
                             'College',
                             'Post Collegiate/Community Band',
                             'Professional'
-                        ]} onUpdateInput={handleOnChange} />
+                        ]} placeholder="-- Please choose your level of experience. --" onUpdateInput={handleOnChange} />
                     </div>
                 </div>
                     <button type="submit" class="btn btn-primary w-100" disabled={isDisabled} onClick={handleSignUp}>Submit</button>

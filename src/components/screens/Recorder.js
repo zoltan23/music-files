@@ -350,9 +350,8 @@ class Recorder extends Component {
     }
 
     render() {
-
         return (
-            <div>
+            <div className="container">
                 <div className="container-fluid">
                     <div class="row">
                         <div id="col-12 accordion">

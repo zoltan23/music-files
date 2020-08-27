@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 
-export default function DropDown({ dropArr, name, onUpdateInput }) {
+export default function DropDown({ dropArr, name, onUpdateInput, placeholder }) {
 
-    const [experience, setExperience] = useState('-- Please choose your level of experience. --')
+    console.log('placeholder', placeholder)
+
+    const [experience, setExperience] = useState(dropArr[dropArr.indexOf(placeholder)])
     const [isInputValid, setIsInputValid] = useState(null)
 
     const setExperienceLevel = (num) => {
@@ -25,6 +27,7 @@ export default function DropDown({ dropArr, name, onUpdateInput }) {
             </>
         )
     }
+
     return (
         <div className="dropdown">
             <button name={name} className={`btn btn-primary dropdown-toggle w-100 ${getValidString(isInputValid)}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

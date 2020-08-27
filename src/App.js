@@ -10,7 +10,6 @@ import Settings from './components/screens/Settings'
 import { auth, db } from './services/firebase'
 import ResetPassword from './components/screens/ResetPassword';
 import { useDispatch, useSelector } from 'react-redux'
-import Settings2 from './components/screens/Settings2';
 import "./App.css"
 
 function App() {
@@ -46,6 +45,7 @@ function App() {
           <Route path="*" component={Landing} />
         </Switch>
       </BrowserRouter>
+
     </>
   );
 }
